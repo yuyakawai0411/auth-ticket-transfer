@@ -1,24 +1,66 @@
-# README
+# アプリの前提条件
+- ユーザーはすでに複数枚のチケットを所持している
+- チケットの譲渡には金銭的やり取りは発生しない
+- チケットの受け取り手にはチケット譲渡の拒否権はない
+- ユーザー名とチケット名は一意である
+- イベント系のチケットを想定しており、イベント当日に使用可能となる
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# API仕様
 
-Things you may want to cover:
+## 所有チケットの照会機能
+### リクエスト
+- HTTP:GET 
+- Body:nickname
+- URL:http://ticket-transfer/user/:id
+### レスポンス
+- ユーザーが所有している全てのチケット
+- HTTPステータス200
+  
+## 所有チケットの譲渡機能
+### リクエスト
+- HTTP:POST
+- Body:ticket,number,sender,recever,password
+- http://ticket-transfer/transtion
+### レスポンス
+- ユーザーが譲渡したチケット名前、枚数、送り主、送り先
+- HTTPステータス201
 
-* Ruby version
+## 譲渡履歴の照会機能
+### リクエスト
+- HTTP:GET
+- Body:なし or nickname
+- http://ticket-transfer/transtion
+### レスポンス
+- 全ユーザーの譲渡履歴
+- HTTPステータス200
 
-* System dependencies
+# 実装した案、実装しなかった案
+## 実装した案
 
-* Configuration
 
-* Database creation
+## 実装しなかった案
+- チケット譲渡を配列で複数選択できるようにする
+  - メリット:
+  - デメリット
+- 期限切れのチケットの自動削除
+  - メリット:不要なチケットが表示されなくなり、有効なチケットのみを確認することができる
+  - デメリット:使用端末の時間設定が狂ってしまった場合、誤ってチケットそのものが消えてしまう可能性がある
+- チケットの受け手が譲渡を承認するかを選択できる
+  - メリット:
+  - デメリット:
+- 自分と繋がりのある人のみチケットを譲渡できる
+  - メリット:譲渡ミスのデメリットを最小限に抑えられる
+  - デメリット:繋がり申請をしないといけない
+- チケットがイベント日時直前に有効になる
+  - メリット:
+  - デメリット:
+- チケットを複数持っている場合は、カウントする
 
-* Database initialization
+# テスト実施に使用した時間
+- 設計:3h
+- コーディング:4h
+- リファクタリング:
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+# 使用方法
+- rails db:create
+- rails db:seed
