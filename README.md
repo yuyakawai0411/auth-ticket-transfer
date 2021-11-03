@@ -60,3 +60,7 @@
 - 設計:3h
 - コーディング:4h
 - リファクタリング:
+
+# 使用方法
+- rails db:create
+- rails db:seed
