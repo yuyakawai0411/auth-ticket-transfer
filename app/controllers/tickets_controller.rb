@@ -3,17 +3,55 @@ class TicketsController < ApplicationController
 
   def index
     @tickets = @user.tickets
+    if @tickets.nil?
+      render json: { status: 404, message: 'チケットは持っていません' }
+    else
+      transfer_to_json
+      render json: { status: 200, data: @data }
+    end
   end
 
   def show
     @ticket = @user.tickets.find_by(id: params[:id])
+    if @ticket.nil?
+      render json: { status: 404, message: 'チケットは持っていません' }
+    else
+      single_transfer_to_json
+      render json: { status: 200, data: @data }
+    end
   end
 
 
   private
 
   def set_user_info
-    @user = User.find(params[:id]).includes(:tickets)
+    @user = User.find(params[:user_id])
+  end
+
+  def transfer_to_json
+    @data = []
+    @tickets.each do |ticket|
+      @data << {
+        id: ticket.id,
+        ticket_name: ticket.ticket_name,
+        event_date: ticket.event_date,
+        category_id: ticket.category_id,
+        status_id: ticket.status_id
+      }
+    end
+    @data.to_json
+  end
+
+  def single_transfer_to_json
+    @data = []
+      @data << {
+        id: @ticket.id,
+        ticket_name: @ticket.ticket_name,
+        event_date: @ticket.event_date,
+        category_id: @ticket.category_id,
+        status_id: @ticket.status_id
+      }
+    @data.to_json
   end
 
 end
