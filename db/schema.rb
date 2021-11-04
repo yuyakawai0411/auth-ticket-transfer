@@ -24,9 +24,9 @@ ActiveRecord::Schema.define(version: 2021_11_03_232602) do
   end
 
   create_table "transitions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "ticket", null: false
-    t.string "sender", null: false
-    t.string "recever", null: false
+    t.integer "ticket", null: false
+    t.integer "sender", null: false
+    t.integer "recever", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
