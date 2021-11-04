@@ -8,7 +8,7 @@ RSpec.describe "Tickets", type: :request do
   let!(:ticket) { FactoryBot.create(:ticket, user_id: user.id) }
   let!(:ticket_other) { FactoryBot.create(:ticket, user_id: user.id) }
     context '存在するユーザーを検索した時' do
-      it 'ユーザーが所持するチケットが全て表示され、HTTP200が返される' do
+      it 'ユーザーが所持するチケットが全て表示される' do
         get "/users/#{user.id}/tickets"
         json = JSON.parse(response.body)
         expect(json['data'].length).to eq(2)
@@ -22,6 +22,10 @@ RSpec.describe "Tickets", type: :request do
         # expect(json['data'][1]['event_date']).to eq(ticket_other.event_date)
         expect(json['data'][1]['category']).to eq(ticket_other.category.name)
         expect(json['data'][1]['status']).to eq(ticket_other.status.name)
+      end
+      it 'HTTP200が返される' do
+        get "/users/#{user.id}/tickets"
+        json = JSON.parse(response.body)
         expect(json['status']).to eq(200)
       end
     end
