@@ -78,16 +78,19 @@
 - [X] Rspecにテストケースを全て書く
 - [X]テストexampleの粒度を細かくする
 - [X]user,ticketのrequestテストをパスさせる
-- []URLを全て修正する
+- [X]URLを全て修正する
+- [X]transitionテーブルは外部キーでアソシエーションする(ticket_idがticketに、user_idがsenderに入るようにする)
+- [X]transitionの外部キーはuser_idとticket_idは継承するようにする
+  
+## ユーザー譲渡機能修正箇所
 - []http://user/:id/tickets/:id/transtionsの譲渡履歴は昇順で表示する
 - []存在しないidが入力された時の例外処理をコントローラに記述する
 - []ユーザーが所持していないチケットは送信できないようにする
-- []transitionテーブルは外部キーでアソシエーションする(ticket_idがticketに、user_idがsenderに入るようにする)
+- []自分自身にチケットを送れないようにする
 - []http://users/:id/tickets/:idでuser_idに紐付かないticket_idは検索してもエラーになる容姿する
-
-## ユーザー譲渡機能修正箇所
 - []http://user/:id/tickets/:id/transtionsのidは配列で渡せるようにし、複数のチケットを一斉送信できるようにする
 - []ticketsテーブルのstatus_idは他の人が見てわかるようにする(テーブル設計状態遷移)
+- update_attributeはバリデーション検証がないため、なるべく使わないようにする
 
 ## リファクタリング
 - []譲渡ロジック(withdraw&deposit)をモデルに移す
@@ -114,10 +117,24 @@
 
 
 # テスト実施に使用した時間
-- 設計:3h
-- コーディング:4h
+- 設計:4h
+- コーディング:8h
 - リファクタリング:
 
 # 使用方法
 - rails db:create
 - rails db:seed
+
+
+# ユーザーサイド
+## あるユーザーが所有するチケットを表示
+- http://user/:id/tickets
+- @user = User.find_by(id: params[:id])
+- @tickets = @user.ownwer
+
+## あるユーザーがあるユーザーにチケットを譲渡する
+- http://user/:id/tickets/:id/transfer
+
+# 管理サーバー
+## 誰が誰に譲渡したかをわかるようにする
+- http://tickets/:id/tracker

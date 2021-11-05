@@ -1,6 +1,8 @@
 class TransitionsController < ApplicationController
+  before_action :set_ticket_info, only: [:index, :show]
+
   def index
-    @transitions = Transition.all
+    @transitions = @ticket.transitions
     if @transitions.nil?
       render json: { status: 404, message: '譲渡履歴は存在しません' }
     else
@@ -10,7 +12,7 @@ class TransitionsController < ApplicationController
   end
 
   def show
-    @transition = Transition.find(params[:id])
+    @transition = @ticket.transitions.find_by(id: params[:id])
     if @transition.nil?
       render json: { status: 404, message: '存在しないユーザーです' }
     else
@@ -20,11 +22,12 @@ class TransitionsController < ApplicationController
   end
 
   def create
-    @transfer_ticket = Transition.new(transfer_ticket_params)
-    if @transfer_ticket.valid?
-      @transfer_ticket.save
-      Ticket.deposit(@transfer_ticket.ticket, @transfer_ticket.recever)
-      Ticket.wisdraw(@transfer_ticket.ticket)
+    @transition = Transition.new(transfer_ticket_params)
+    if @transition.valid?
+      @transition.save
+      Ticket.transfer(@transition.ticket_id, @transition.recever_id)
+      # Ticket.deposit(@transfer_ticket.ticket_id, @transfer_ticket.recever_id)
+      # Ticket.wisdraw(@transfer_ticket.ticket_id)
       single_transfer_to_json
       render json: { status: 200, data: @data }
     else
@@ -33,8 +36,14 @@ class TransitionsController < ApplicationController
   end
 
   private
+
+  def set_ticket_info
+    @user = User.find(params[:user_id])
+    @ticket = @user.tickets.find_by(id: params[:ticket_id])
+  end
+
   def transfer_ticket_params
-    params.permit(:ticket, :sender, :recever)
+    params.permit(:recever_id).merge(ticket_id: params[:ticket_id], sender_id: params[:user_id])
   end
 
   def transfer_to_json
@@ -42,9 +51,9 @@ class TransitionsController < ApplicationController
     @transitions.each do |transition|
       @data << {
         id: transition.id,
-        ticket: transition.ticket,
-        sender: transition.sender,
-        recever: transition.recever,
+        ticket_id: transition.ticket_id,
+        sender_id: transition.sender_id,
+        recever_id: transition.recever_id,
         created_at: Time.parse(transition.created_at.to_s).to_i
       }
     end
@@ -55,9 +64,9 @@ class TransitionsController < ApplicationController
     @data = []
       @data << {
         id: @transition.id,
-        ticket: @transition.ticket,
-        sender: @transition.sender,
-        recever: @transition.recever,
+        ticket_id: @transition.ticket_id,
+        sender_id: @transition.sender_id,
+        recever_id: @transition.recever_id,
         created_at: Time.parse(@transition.created_at.to_s).to_i
       }
     @data.to_json

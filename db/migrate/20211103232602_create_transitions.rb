@@ -1,9 +1,9 @@
 class CreateTransitions < ActiveRecord::Migration[6.0]
   def change
     create_table :transitions do |t|
-      t.integer :ticket, null: false
-      t.integer :sender, null: false
-      t.integer :recever, null: false
+      t.references :ticket, null: false, foreign_key: true
+      t.references :sender, null: false, foreign_key: { to_table: :users }
+      t.references :recever, null: false, foreign_key: { to_table: :users }
       t.timestamps
     end
   end

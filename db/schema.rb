@@ -24,11 +24,14 @@ ActiveRecord::Schema.define(version: 2021_11_03_232602) do
   end
 
   create_table "transitions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.integer "ticket", null: false
-    t.integer "sender", null: false
-    t.integer "recever", null: false
+    t.bigint "ticket_id", null: false
+    t.bigint "sender_id", null: false
+    t.bigint "recever_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["recever_id"], name: "index_transitions_on_recever_id"
+    t.index ["sender_id"], name: "index_transitions_on_sender_id"
+    t.index ["ticket_id"], name: "index_transitions_on_ticket_id"
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -41,4 +44,7 @@ ActiveRecord::Schema.define(version: 2021_11_03_232602) do
   end
 
   add_foreign_key "tickets", "users"
+  add_foreign_key "transitions", "tickets"
+  add_foreign_key "transitions", "users", column: "recever_id"
+  add_foreign_key "transitions", "users", column: "sender_id"
 end

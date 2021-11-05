@@ -1,6 +1,7 @@
 class Ticket < ApplicationRecord
-  extend ActiveHash::Associations::ActiveRecordExtensions
   belongs_to :user
+  has_many :transitions
+  extend ActiveHash::Associations::ActiveRecordExtensions
   belongs_to :category
   belongs_to :status
 
@@ -11,8 +12,14 @@ class Ticket < ApplicationRecord
     validates :status_id
   end
 
+  def self.transfer(ticket, recever)
+    wisdraw_ticket = Ticket.find_by(id: ticket)
+    wisdraw_ticket.update_attribute(:user_id, recever) #バリデーションが聞かないため、危険
+  end
+
   def self.wisdraw(ticket)
     wisdraw_ticket = Ticket.find_by(id: ticket)
+    binding.pry
     wisdraw_ticket.destroy
   end
 
