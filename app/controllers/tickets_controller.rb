@@ -2,7 +2,7 @@ class TicketsController < ApplicationController
   before_action :set_user_info, only: [:index, :show]
 
   def index
-    @tickets = @user.tickets
+    @tickets = @user.tickets.order(ticket_name: 'DESC')
     if @tickets.nil?
       render json: { status: 404, message: 'チケットは持っていません' }
     else

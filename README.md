@@ -81,24 +81,30 @@
 - [X]URLを全て修正する
 - [X]transitionテーブルは外部キーでアソシエーションする(ticket_idがticketに、user_idがsenderに入るようにする)
 - [X]transitionの外部キーはuser_idとticket_idは継承するようにする
+- [X]http://user/:id/tickets/:id/transtionsの譲渡履歴は昇順で表示する
   
-## ユーザー譲渡機能修正箇所
-- []http://user/:id/tickets/:id/transtionsの譲渡履歴は昇順で表示する
+## 例外処理に対する耐性
+- []例外を考慮した上でのテストケースを描き直す
 - []存在しないidが入力された時の例外処理をコントローラに記述する
 - []ユーザーが所持していないチケットは送信できないようにする
 - []自分自身にチケットを送れないようにする
 - []http://users/:id/tickets/:idでuser_idに紐付かないticket_idは検索してもエラーになる容姿する
-- []http://user/:id/tickets/:id/transtionsのidは配列で渡せるようにし、複数のチケットを一斉送信できるようにする
-- []ticketsテーブルのstatus_idは他の人が見てわかるようにする(テーブル設計状態遷移)
-- update_attributeはバリデーション検証がないため、なるべく使わないようにする
-
+  
 ## リファクタリング
 - []譲渡ロジック(withdraw&deposit)をモデルに移す
 - []transfer_jsonロジックをメタプロで共通化できないか考える
 
+## +α
+- []http://user/:id/tickets/:id/transtionsのidは配列で渡せるようにし、複数のチケットを一斉送信できるようにする
+- []ticketsテーブルのstatus_idは他の人が見てわかるようにする(テーブル設計状態遷移)
+- []update_attributeはバリデーション検証がないため、なるべく使わないようにする
+- []ticketの一覧は、有効なチケットの中で、event_dateが本日の日付に近いものを優先的に並べる
+- []collectionで譲渡履歴一覧を所得するルーティングを設定
+
 ## 実装した案
 - イベント系のチケットを想定しており、イベント当日にチケットのステータスが使用可となる
-
+- ticketの一覧は、有効なチケットの中で、event_dateが本日の日付に近いものを優先的に並べる
+- 
 ## 実装しなかった案
 - チケット譲渡を配列で複数選択できるようにする
   - メリット:

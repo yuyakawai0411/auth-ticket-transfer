@@ -2,7 +2,7 @@ class TransitionsController < ApplicationController
   before_action :set_ticket_info, only: [:index, :show]
 
   def index
-    @transitions = @ticket.transitions
+    @transitions = @ticket.transitions.order(created_at: 'DESC')
     if @transitions.nil?
       render json: { status: 404, message: '譲渡履歴は存在しません' }
     else
