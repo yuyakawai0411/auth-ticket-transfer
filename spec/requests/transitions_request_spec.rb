@@ -2,48 +2,80 @@ require 'rails_helper'
 
 RSpec.describe "Transitions", type: :request do
   describe 'POST #create' do
+  let!(:user_sender) { FactoryBot.create(:user) }
+  let!(:user_recever) { FactoryBot.create(:user) }
+  let!(:ticket) { FactoryBot.create(:ticket, user_id: user_sender.id) }
+  let!(:transition) { FactoryBot.create(:transition, ticket_id: ticket.id, sender_id: user_sender.id, recever_id: user_recever.id) }
     context 'senderに存在するユーザーを選択した時' do
       it 'ticketsテーブルでticketのuser_idがsenderのidである' do
-
+        get "/users/#{user_sender.id}/tickets/#{ticket.id}"
+        json = JSON.parse(response.body)
+        expect(json['data'][0]['user_id']).to eq(user_sender.id)
       end
       it 'transitionモデルのカウントが1増える' do
-      
+        expect{
+        post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_recever.id } 
+        }. to change(Transition, :count).by(1)
       end
       it 'transitionに正しい値がある' do
-      
+        post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_recever.id } 
+        json = JSON.parse(response.body)
+        expect(json['data'][0]['ticket_id']).to eq(ticket.ticket_id)
+        expect(json['data'][0]['sender_id']).to eq(ticket.sender_id)
+        expect(json['data'][0]['recevr_id']).to eq(ticket.recevr_id)
       end
-      it 'ticketsテーブルでticketのuser_idがreceverのidになる' do 
-      
+      it 'ticketsテーブルでticketのuser_idがreceverのidになる' do
+        get "/users/#{user_recever.id}/tickets/#{ticket.id}"
+        json = JSON.parse(response.body)
+        expect(json['data'][0]['user_id']).to eq(user_recever.id) 
       end
     end
     
     context 'senderに存在しないユーザーを選択した時' do
       it 'ticketsテーブルでticketのuser_idがsenderのidである' do
-
+        get "/users/#{user_sender.id}/tickets/#{ticket.id}"
+        json = JSON.parse(response.body)
+        expect(json['data'][0]['user_id']).to eq(user_sender.id)
       end
       it 'transitionモデルのカウントが増えない' do
-      
+        user_not_exist = user_sender.id + 1
+        expect{
+          post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_not_exist } 
+          }. to change(Transition, :count).by(0)
       end
       it 'エラーメッセージが返される' do
-      
+        user_not_exist = user_sender.id + 1
+        post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_not_exist }
+        json = JSON.parse(response.body)
+        expect(json['message']).to eq('送り手は存在しないユーザーです') 
       end
       it 'ticketsテーブルでticketのuser_idがsenderのidである' do 
-      
+        get "/users/#{user_sender.id}/tickets/#{ticket.id}"
+        json = JSON.parse(response.body)
+        expect(json['data'][0]['user_id']).to eq(user_sender.id)
       end
     end
 
     context 'senderに自分自身を選択した時' do
       it 'ticketsテーブルでticketのuser_idがsenderのidである' do
-
+        get "/users/#{user_sender.id}/tickets/#{ticket.id}"
+        json = JSON.parse(response.body)
+        expect(json['data'][0]['user_id']).to eq(user_sender.id)
       end
       it 'transitionモデルのカウントが増えない' do
-      
+        expect{
+          post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_sender.id } 
+          }. to change(Transition, :count).by(0)
       end
       it 'エラーメッセージが返される' do
-      
+        post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_sender.id } 
+        json = JSON.parse(response.body)
+        expect(json['message']).to eq('送り手に自分を選択できません') 
       end
       it 'ticketsテーブルでticketのuser_idがsenderのidである' do 
-      
+        get "/users/#{user_sender.id}/tickets/#{ticket.id}"
+        json = JSON.parse(response.body)
+        expect(json['data'][0]['user_id']).to eq(user_sender.id)
       end
     end
   end

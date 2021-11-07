@@ -35,8 +35,9 @@ class TicketsController < ApplicationController
         id: ticket.id,
         ticket_name: ticket.ticket_name,
         event_date: ticket.event_date,
-        category: ticket.category.name,
-        status: ticket.status.name,
+        category_id: ticket.category.name,
+        status_id: ticket.status.name,
+        user_id: ticket.user_id,
         created_at: Time.parse(ticket.created_at.to_s).to_i
       }
     end
@@ -49,8 +50,9 @@ class TicketsController < ApplicationController
         id: @ticket.id,
         ticket_name: @ticket.ticket_name,
         event_date: @ticket.event_date,
-        category: @ticket.category.name,
-        status: @ticket.status.name,
+        category_id: @ticket.category.name,
+        status_id: @ticket.status.name,
+        user_id: @ticket.user_id,
         created_at: Time.parse(@ticket.created_at.to_s).to_i
       }
     @data.to_json
