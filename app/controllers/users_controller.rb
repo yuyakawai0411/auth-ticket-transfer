@@ -1,9 +1,8 @@
 class UsersController < ApplicationController
 
   def index
-    @users = User.all.order(nickname: 'DESC')
-    if @users.nil?
-      render json: { status: 404, message: '存在しないユーザーです' }
+    unless @users = User.all.order(nickname: 'DESC')
+      render json: { status: 404, message: 'ユーザー登録はありません' }
     else
       transfer_to_json
       render json: { status: 200, data: @data }
@@ -11,8 +10,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
-    if @user.nil?
+    unless @user = User.find_by(id: params[:id])
       render json: { status: 404, message: '存在しないユーザーです' }
     else
       single_transfer_to_json

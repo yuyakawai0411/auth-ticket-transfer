@@ -1,9 +1,8 @@
 class TicketsController < ApplicationController
-  before_action :set_user_info, only: [:index, :show]
+  before_action :user_exist?, only: [:index, :show]
 
   def index
-    @tickets = @user.tickets.order(ticket_name: 'DESC')
-    if @tickets.nil?
+    unless @tickets = @user.tickets.order(ticket_name: 'DESC')
       render json: { status: 404, message: 'チケットは持っていません' }
     else
       transfer_to_json
@@ -12,9 +11,8 @@ class TicketsController < ApplicationController
   end
 
   def show
-    @ticket = @user.tickets.find_by(id: params[:id])
-    if @ticket.nil?
-      render json: { status: 404, message: 'チケットは持っていません' }
+    unless @ticket = @user.tickets.find_by(id: params[:id])
+      render json: { status: 404, message: '存在しないチケットです' }
     else
       single_transfer_to_json
       render json: { status: 200, data: @data }
@@ -24,8 +22,10 @@ class TicketsController < ApplicationController
 
   private
 
-  def set_user_info
-    @user = User.find(params[:user_id])
+  def user_exist?
+    unless @user = User.find_by(id: params[:user_id])
+      render json: { status: 404, message: '存在しないユーザーです' }
+    end
   end
 
   def transfer_to_json

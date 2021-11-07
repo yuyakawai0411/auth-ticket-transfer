@@ -1,9 +1,9 @@
 class TransitionsController < ApplicationController
-  before_action :set_ticket_info, only: [:index, :show]
+  before_action :user_exist?, only: [:index, :show, :create]
+  before_action :ticket_exist?, only: [:index, :show, :create]
 
   def index
-    @transitions = @ticket.transitions.order(created_at: 'DESC')
-    if @transitions.nil?
+    unless @transitions = @ticket.transitions.order(created_at: 'DESC')
       render json: { status: 404, message: '譲渡履歴は存在しません' }
     else
       transfer_to_json
@@ -12,9 +12,8 @@ class TransitionsController < ApplicationController
   end
 
   def show
-    @transition = @ticket.transitions.find_by(id: params[:id])
-    if @transition.nil?
-      render json: { status: 404, message: '存在しないユーザーです' }
+    unless @transition = @ticket.transitions.find_by(id: params[:id])
+      render json: { status: 404, message: '存在しない譲渡履歴です' }
     else
       single_transfer_to_json
       render json: { status: 200, data: @data }
@@ -24,23 +23,42 @@ class TransitionsController < ApplicationController
   def create
     @transition = Transition.new(transfer_ticket_params)
     if @transition.valid?
-      @transition.save
-      Ticket.transfer(@transition.ticket_id, @transition.recever_id)
-      # Ticket.deposit(@transfer_ticket.ticket_id, @transfer_ticket.recever_id)
-      # Ticket.wisdraw(@transfer_ticket.ticket_id)
-      single_transfer_to_json
-      render json: { status: 200, data: @data }
+      if @transition.recever_id == @transition.sender_id 
+        render json: { status: 404, message: '送り手に自分を選択できません' } 
+      elsif User.find_by(id: params[:recever_id])
+        @transition.save
+        Ticket.transfer(@transition.ticket_id, @transition.recever_id)
+        single_transfer_to_json
+        render json: { status: 200, data: @data } 
+      else
+        render json: { status: 404, message: '送り手は存在しないユーザーです' } 
+      end
     else
-      render json: { status: 404, message: 'チケットは持っていません' }
+      render json: { status: 404, message: 'チケット譲渡に失敗しました' } 
     end
   end
 
   private
 
-  def set_ticket_info
-    @user = User.find(params[:user_id])
-    @ticket = @user.tickets.find_by(id: params[:ticket_id])
+  def user_exist?
+    unless @user = User.find_by(id: params[:user_id])
+      render json: { status: 404, message: '存在しないユーザーです' } 
+    end
   end
+
+  def ticket_exist?
+    unless @ticket = @user.tickets.find_by(id: params[:ticket_id])
+      render json: { status: 404, message: '存在しないチケットです' } 
+    end
+  end
+
+  # def recever_exist?
+  #   if @transition.recever_id == @transition.sender_id 
+  #     render json: { status: 404, message: '送り手に自分を選択できません' } 
+  #   elsif User.find_by(id: params[:recever_id])
+  #     render json: { status: 404, message: '送り手は存在しないユーザーです' } 
+  #   end
+  # end
 
   def transfer_ticket_params
     params.permit(:recever_id).merge(ticket_id: params[:ticket_id], sender_id: params[:user_id])

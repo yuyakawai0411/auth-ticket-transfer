@@ -8,7 +8,7 @@ RSpec.describe "Users", type: :request do
       it 'user,user_otherデータが返される' do
         get '/users'
         json = JSON.parse(response.body)
-        expect(json['data'].length).to eq(2) #expect(json['data'].length).to eq(0)
+        expect(json['data'].length).to eq(2) 
       end
       it 'userに正しい値がある' do
         get '/users'
@@ -63,6 +63,7 @@ RSpec.describe "Users", type: :request do
       it 'エラーメッセージが返される' do
         get "/users/#{user_not_exist.id}"
         json = JSON.parse(response.body)
+        binding.pry
         expect(json['data'].length).to eq(2) #expect(json['data'].length).to eq(0)
       end
       it  'HTTP404が返される' do
