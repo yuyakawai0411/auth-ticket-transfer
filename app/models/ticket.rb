@@ -8,8 +8,8 @@ class Ticket < ApplicationRecord
   with_options presence: true do
     validates :ticket_name
     validates :event_date
-    validates :category_id
-    validates :status_id
+    validates :category_id, numericality: { greater_than: 0, less_than: 6 }
+    validates :status_id, numericality: { greater_than: 0, less_than: 4 }
   end
 
   def self.transfer(ticket, recever)
