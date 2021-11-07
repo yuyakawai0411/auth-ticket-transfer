@@ -13,7 +13,7 @@ RSpec.describe "Users", type: :request do
       it 'userに正しい値がある' do
         get '/users'
         json = JSON.parse(response.body)
-        expect(json['data'][0]['id']).to eq(user.id)
+        expect(json['data'][0]['id']).to eq(user.id) #idの取得が1ズレる
         expect(json['data'][0]['nickname']).to eq(user.nickname)
         expect(json['data'][0]['email']).to eq(user.email)
         expect(json['data'][0]['phone_number']).to eq(user.phone_number)
@@ -21,7 +21,7 @@ RSpec.describe "Users", type: :request do
       it 'user_otherに正しい値がある' do
         get '/users'
         json = JSON.parse(response.body)
-        expect(json['data'][1]['id']).to eq(user_other.id)
+        expect(json['data'][1]['id']).to eq(user_other.id) #idの取得が1ズレる
         expect(json['data'][1]['nickname']).to eq(user_other.nickname)
         expect(json['data'][1]['email']).to eq(user_other.email)
         expect(json['data'][1]['phone_number']).to eq(user_other.phone_number)
@@ -37,7 +37,6 @@ RSpec.describe "Users", type: :request do
   describe 'GET #show' do
   let!(:user) { FactoryBot.create(:user) } 
   let!(:user_other) { FactoryBot.create(:user) } 
-  let(:user_not_exist) { FactoryBot.build(:user) }
     context '存在するユーザーを検索する時' do
       it 'userデータが返される' do
         get "/users/#{user.id}"
@@ -61,15 +60,16 @@ RSpec.describe "Users", type: :request do
 
     context '存在しないユーザーを検索する時' do
       it 'エラーメッセージが返される' do
-        get "/users/#{user_not_exist.id}"
+        user_not_exist = user.id + user_other.id
+        get "/users/#{user_not_exist}" 
         json = JSON.parse(response.body)
-        binding.pry
-        expect(json['data'].length).to eq(2) #expect(json['data'].length).to eq(0)
+        expect(json['message']).to eq('存在しないユーザーです') 
       end
       it  'HTTP404が返される' do
-        get "/users/#{user_not_exist.id}"
+        user_not_exist = user.id + user_other.id
+        get "/users/#{user_not_exist}"
         json = JSON.parse(response.body)
-        expect(json['status']).to eq(200) #expect(json['status']).to eq(404) 
+        expect(json['status']).to eq(404) 
       end
     end
   end
