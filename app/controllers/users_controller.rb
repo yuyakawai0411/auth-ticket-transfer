@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   def index
-    @users = User.all.order(nickname: 'DESC')
+    @users = User.all
     if @users.blank? 
       render json: { status: 404, message: 'ユーザー登録はありません' }
     else
