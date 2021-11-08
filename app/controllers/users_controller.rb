@@ -1,47 +1,48 @@
 class UsersController < ApplicationController
 
   def index
-    unless @users = User.all.order(nickname: 'DESC')
+    @users = User.all.order(nickname: 'DESC')
+    if @users.blank? 
       render json: { status: 404, message: 'ユーザー登録はありません' }
     else
-      transfer_to_json
+      transfer_to_json(@users)
       render json: { status: 200, data: @data }
     end
   end
 
   def show
-    unless @user = User.find_by(id: params[:id])
+    @user = User.find_by(id: params[:id])
+    if @user.blank? 
       render json: { status: 404, message: '存在しないユーザーです' }
     else
-      single_transfer_to_json
+      transfer_to_json(@user)
       render json: { status: 200, data: @data }
     end
   end
 
   private
-
-  def transfer_to_json
+  
+  def transfer_to_json(user_data)
     @data = []
-    @users.each do |user|
+    if user_data.is_a?(ActiveRecord::Relation)
+      user_data.each do |user|
+        @data << {
+          id: user.id,
+          nickname: user.nickname,
+          email: user.email,
+          phone_number: user.phone_number
+        }
+      end
+      @data.to_json
+    else
       @data << {
-        id: user.id,
-        nickname: user.nickname,
-        email: user.email,
-        phone_number: user.phone_number
+        id: user_data.id,
+        nickname: user_data.nickname,
+        email: user_data.email,
+        phone_number: user_data.phone_number
       }
+      @data.to_json
     end
-    @data.to_json
-  end
-
-  def single_transfer_to_json
-    @data = []
-      @data << {
-        id: @user.id,
-        nickname: @user.nickname,
-        email: @user.email,
-        phone_number: @user.phone_number
-      }
-    @data.to_json
   end
 
 end
