@@ -23,20 +23,14 @@ class TransitionsController < ApplicationController
   end
 
   def create
-    @transition = Transition.new(transfer_ticket_params)
-    if @transition.valid?
-      if @transition.recever_id == @transition.sender_id 
-        render json: { status: 404, message: '送り手に自分を選択できません' } 
-      elsif User.find_by(id: params[:recever_id])
-        @transition.save
-        Ticket.transfer(@transition.ticket_id, @transition.recever_id)
-        single_transfer_to_json
-        render json: { status: 200, data: @data } 
-      else
-        render json: { status: 404, message: '送り手は存在しないユーザーです' } 
-      end
+    @transfer = Transition.new(transfer_ticket_params)
+    if @transfer.invalid?
+      render json: { status: 404, message: '送り手を選択してください' } 
     else
-      render json: { status: 404, message: 'チケット譲渡に失敗しました' } 
+      recever_exist?
+      Transition.transfer(@transfer, @ticket)
+      transfer_to_json(@transfer)
+      render json: { status: 200, data: @data } 
     end
   end
 
@@ -53,6 +47,15 @@ class TransitionsController < ApplicationController
     @ticket = @user.tickets.find_by(id: params[:ticket_id])
     if @ticket.blank?
       render json: { status: 404, message: '存在しないチケットです' } and return
+    end
+  end
+
+  def recever_exist?
+    @recever = User.find_by(id: params[:recever_id])
+    if @recever.blank?
+      render json: { status: 404, message: '送り手は存在しないユーザーです' } and return
+    elsif @recever.id == @user.id
+      render json: { status: 404, message: '送り手に自分を選択できません' } and return
     end
   end
 

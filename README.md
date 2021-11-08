@@ -90,9 +90,9 @@
 - [X]存在しないidが入力された時の例外処理をコントローラに記述する
   
 ## リファクタリング
-- []requestのテストケースを描き直す
 - [X]譲渡ロジック(withdraw&deposit)をモデルに移す(update_attributeはバリデーション検証がないため、なるべく使わないようにする)
 - [X]transfer_jsonロジックをメタプロで共通化できないか考える
+- []requestのテストケースを描き直す
 
 ## +α
 - []http://user/:id/tickets/:id/transtionsのidは配列で渡せるようにし、複数のチケットを一斉送信できるようにする
