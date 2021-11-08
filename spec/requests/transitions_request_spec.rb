@@ -17,7 +17,7 @@ RSpec.describe "Transitions", type: :request do
         json = JSON.parse(response.body)
         expect(json['data'][0]['ticket_id']).to eq(ticket.ticket_name)
         expect(json['data'][0]['sender_id']).to eq(user_sender.nickname)
-        expect(json['data'][0]['recevr_id']).to eq(user_recever.nickname)
+        expect(json['data'][0]['recever_id']).to eq(user_recever.nickname)
       end
       it 'ticketsテーブルでticketのuser_idがreceverのidになる' do
         get "/users/#{user_sender.id}/tickets/#{ticket.id}"

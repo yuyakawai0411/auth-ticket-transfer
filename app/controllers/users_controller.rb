@@ -33,7 +33,6 @@ class UsersController < ApplicationController
           phone_number: user.phone_number
         }
       end
-      @data.to_json
     else
       @data << {
         id: user_data.id,
@@ -41,7 +40,6 @@ class UsersController < ApplicationController
         email: user_data.email,
         phone_number: user_data.phone_number
       }
-      @data.to_json
     end
   end
 

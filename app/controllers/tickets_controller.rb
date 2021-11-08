@@ -26,7 +26,7 @@ class TicketsController < ApplicationController
   def user_exist?
     @user = User.find_by(id: params[:user_id])
     if @user.blank? 
-      render json: { status: 404, message: '存在しないユーザーです' } and return
+      render json: { status: 404, message: '存在しないユーザーです' } 
     end
   end
 
@@ -44,7 +44,6 @@ class TicketsController < ApplicationController
           created_at: Time.parse(ticket.created_at.to_s).to_i
         }
       end
-      @data.to_json
     else
       @data << {
         id: ticket_data.id,
@@ -55,7 +54,6 @@ class TicketsController < ApplicationController
         user_id: ticket_data.user.nickname,
         created_at: Time.parse(ticket_data.created_at.to_s).to_i
       }
-      @data.to_json
     end
   end
 

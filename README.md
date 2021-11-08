@@ -92,14 +92,15 @@
 ## リファクタリング
 - [X]譲渡ロジック(withdraw&deposit)をモデルに移す(update_attributeはバリデーション検証がないため、なるべく使わないようにする)
 - [X]transfer_jsonロジックをメタプロで共通化できないか考える
-- []requestのテストケースを描き直す
+- []複数クエリのリクエストを直す
+- []transitionsコントローラのticket_existでunpermit user_id,ticket_idを直す
+- []transitionsのcreateのN+1問題を解決する(createアクション)
+- []transitionのrequestテストケース(create)を描き直す
 
 ## +α
 - []http://user/:id/tickets/:id/transtionsのidは配列で渡せるようにし、複数のチケットを一斉送信できるようにする
 - []ticketsテーブルのstatus_idは他の人が見てわかるようにする(テーブル設計状態遷移)
   - ticketの一覧は、有効なチケットの中で、event_dateが本日の日付に近いものを優先的に並べる
-- []transitionsのcreateのN+1問題を解決する
-- []transitionsコントローラのticket_existでunpermit user_id,ticket_idを直す
 
 ## 質問
 ### ソースコード
@@ -140,7 +141,7 @@
 # テスト実施に使用した時間
 - 設計:4h
 - コーディング:12h
-- リファクタリング:
+- リファクタリング:4h
 
 # 使用方法
 - rails db:create

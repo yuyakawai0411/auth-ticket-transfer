@@ -1,6 +1,7 @@
 class TransitionsController < ApplicationController
   before_action :user_exist?, only: [:index, :show, :create]
   before_action :ticket_exist?, only: [:index, :show, :create]
+  before_action :recever_exist?, only: [:create]
 
   def index
     @transitions = @ticket.transitions.includes([:sender, :recever]).order(created_at: 'DESC')
@@ -23,11 +24,12 @@ class TransitionsController < ApplicationController
   end
 
   def create
-    @transfer = Transition.new(transfer_ticket_params)
+    @transfer = Transition.new(transfer_ticket_params) #Unpermitted parameters: :user_id, :ticket_id
     if @transfer.invalid?
       render json: { status: 404, message: '送り手を選択してください' } 
+    elsif @recever.id == @user.id
+      render json: { status: 404, message: '送り手に自分を選択できません' } 
     else
-      recever_exist?
       Transition.transfer(@transfer, @ticket)
       transfer_to_json(@transfer)
       render json: { status: 200, data: @data } 
@@ -39,23 +41,21 @@ class TransitionsController < ApplicationController
   def user_exist?
     @user = User.find_by(id: params[:user_id])
     if @user.blank?
-      render json: { status: 404, message: '存在しないユーザーです' } and return
+      render json: { status: 404, message: '存在しないユーザーです' } 
     end
   end
 
   def ticket_exist?
     @ticket = @user.tickets.find_by(id: params[:ticket_id])
     if @ticket.blank?
-      render json: { status: 404, message: '存在しないチケットです' } and return
+      render json: { status: 404, message: '存在しないチケットです' } 
     end
   end
 
   def recever_exist?
     @recever = User.find_by(id: params[:recever_id])
     if @recever.blank?
-      render json: { status: 404, message: '送り手は存在しないユーザーです' } and return
-    elsif @recever.id == @user.id
-      render json: { status: 404, message: '送り手に自分を選択できません' } and return
+      render json: { status: 404, message: '送り手は存在しないユーザーです' } 
     end
   end
 
@@ -75,7 +75,6 @@ class TransitionsController < ApplicationController
           created_at: Time.parse(transition.created_at.to_s).to_i
         }
       end
-      @data.to_json
     else
       @data << {
         id: transition_data.id,
@@ -84,7 +83,6 @@ class TransitionsController < ApplicationController
         recever_id: transition_data.recever.nickname,
         created_at: Time.parse(transition_data.created_at.to_s).to_i
       }
-      @data.to_json
     end
   end
 
