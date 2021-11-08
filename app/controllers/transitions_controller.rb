@@ -3,7 +3,7 @@ class TransitionsController < ApplicationController
   before_action :ticket_exist?, only: [:index, :show, :create]
 
   def index
-    @transitions = @ticket.transitions.order(created_at: 'DESC')
+    @transitions = @ticket.transitions.includes([:sender, :recever]).order(created_at: 'DESC')
     if @transitions.blank?
       render json: { status: 404, message: '譲渡履歴は存在しません' }
     else
@@ -13,7 +13,7 @@ class TransitionsController < ApplicationController
   end
 
   def show
-    @transition = @ticket.transitions.find_by(id: params[:id])
+    @transition = @ticket.transitions.includes([:sender, :recever]).find_by(id: params[:id])
     if @transition.blank?
       render json: { status: 404, message: '存在しない譲渡履歴です' }
     else

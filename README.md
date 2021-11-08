@@ -98,7 +98,8 @@
 - []http://user/:id/tickets/:id/transtionsのidは配列で渡せるようにし、複数のチケットを一斉送信できるようにする
 - []ticketsテーブルのstatus_idは他の人が見てわかるようにする(テーブル設計状態遷移)
   - ticketの一覧は、有効なチケットの中で、event_dateが本日の日付に近いものを優先的に並べる
-- [X]collectionで譲渡履歴一覧を所得するルーティングを設定
+- []transitionsのcreateのN+1問題を解決する
+- []transitionsコントローラのticket_existでunpermit user_id,ticket_idを直す
 
 ## 質問
 ### ソースコード
