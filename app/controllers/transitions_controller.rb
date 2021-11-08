@@ -69,9 +69,9 @@ class TransitionsController < ApplicationController
       @transitions.each do |transition|
         @data << {
           id: transition.id,
-          ticket_id: transition.ticket_id,
-          sender_id: transition.sender_id,
-          recever_id: transition.recever_id,
+          ticket_id: transition.ticket.ticket_name,
+          sender_id: transition.sender.nickname,
+          recever_id: transition.recever.nickname,
           created_at: Time.parse(transition.created_at.to_s).to_i
         }
       end
@@ -79,9 +79,9 @@ class TransitionsController < ApplicationController
     else
       @data << {
         id: transition_data.id,
-        ticket_id: transition_data.ticket_id,
-        sender_id: transition_data.sender_id,
-        recever_id: transition_data.recever_id,
+        ticket_id: transition_data.ticket.ticket_name,
+        sender_id: transition_data.sender.nickname,
+        recever_id: transition_data.recever.nickname,
         created_at: Time.parse(transition_data.created_at.to_s).to_i
       }
       @data.to_json

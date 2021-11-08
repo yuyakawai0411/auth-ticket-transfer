@@ -40,7 +40,7 @@ class TicketsController < ApplicationController
           event_date: ticket.event_date,
           category_id: ticket.category.name,
           status_id: ticket.status.name,
-          user_id: ticket.user_id,
+          user_id: ticket.user.nickname,
           created_at: Time.parse(ticket.created_at.to_s).to_i
         }
       end
@@ -52,7 +52,7 @@ class TicketsController < ApplicationController
         event_date: ticket_data.event_date,
         category_id: ticket_data.category.name,
         status_id: ticket_data.status.name,
-        user_id: ticket_data.user_id,
+        user_id: ticket_data.user.nickname,
         created_at: Time.parse(ticket_data.created_at.to_s).to_i
       }
       @data.to_json
