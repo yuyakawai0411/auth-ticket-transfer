@@ -1,58 +1,80 @@
-# アプリの前提条件
+# 課題内容
+あるユーザが複数枚の電子チケットを購入し、家族や友人へ譲渡することがある。
+このケースを想定して、電子チケットの譲渡機能のAPI群を作成せよ。
+
+# 実装するAPI
+- あるユーザが所有するチケットの情報を取得できる API 
+- 譲渡機能を実現するために必要な API 群
+- 誰が誰に譲渡したかを、あとから追跡できる API
+
+# アプリの前提条件(自分で設定)
 - ユーザーはすでに複数枚のチケットを所持している
 - チケットの譲渡には金銭的やり取りは発生しない
 - チケットの受け手には、譲渡の拒否権はない
 - ユーザーログイン等の認証機能は必要としない
 - 譲渡履歴はユーザー→チケット→譲渡履歴の順に探索することを想定
-  
+
+# 特に確認いただきたいところ
+## ソースコード
+- []trasitions controllerのリダイレクトが複雑ではないか？
+  - 予期せぬリクエストでエラーになる設計をしていないか？
+- []外部キーには、マイグレーションファイルでnull false制約、モデルでpresentのバリデーションを宣言すべきか？
+- []その他、必要な機能の実装もれや設計ミスはないか？
+
+## Rspec
+- []modelのバリデーションテストにて外部キーのnullテストをすべきか？
+  - FactoryBotでアソシエーョン設定しているため、外部キーに直接nullを挿入することができない
+- []transition requestテストのexampleの粒度が細かすぎないか？
+
 # API仕様
-## ユーザー機能
+## ユーザ一覧
 ### リクエスト
 - HTTP:GET 
 - Body:
 - URL:http://users
 
 ### レスポンス
-- ユーザー情報
+- 全てのユーザー情報
 - HTTPステータス200
 
-## ユーザー機能
+## ユーザー詳細
 ### リクエスト
-- HTTP:GET 
+- HTTP:GET
 - Body:
 - URL:http://users/:id
 
 ### レスポンス
-- ユーザー情報
+- 特定のユーザー情報
 - HTTPステータス200
 
-## 所有チケットの照会機能
+## 所有チケットの一覧
 ### リクエスト
 - HTTP:GET 
 - Body:
 - URL:http://users/:id/tickets
 
 ### レスポンス
-- ユーザーが所有している全てのチケット情報
+- 特定のユーザーが所有している全てのチケット情報
 - HTTPステータス200
 
-## 所有チケットの照会機能
+## 所有チケットの詳細
 ### リクエスト
 - HTTP:GET 
 - Body:
 - URL:http://users/:id/tickets/:id
 
 ### レスポンス
-- ユーザーが所有している全てのチケット情報
+- 特定のユーザーが所有している特定のチケット情報
 - HTTPステータス200
 
-## 所有チケットの譲渡機能
+## 所有チケットの譲渡
 ### リクエスト
 - HTTP:POST
-- Body:recever
+- Body:recever_id
 - http://user/:id/tickets/:id/transtions
+  
 ### レスポンス
-- ユーザーが譲渡したチケット情報
+- 譲渡履歴
 - HTTPステータス201
 
 ## 譲渡履歴の照会機能
@@ -61,7 +83,7 @@
 - Body:なし 
 - http://user/:id/tickets/:id/transtions
 ### レスポンス
-- 全ユーザーの譲渡履歴
+- 特定のチケットの全ての譲渡履歴
 - HTTPステータス200
 
 ## 譲渡履歴の照会機能
@@ -70,57 +92,31 @@
 - Body:なし 
 - http://user/:id/tickets/:id/transtions/:id
 ### レスポンス
-- 全ユーザーの譲渡履歴
+- 特定のチケットの特定の譲渡履歴
 - HTTPステータス200
 
-# 実装した案、実装しなかった案
-## 修正箇所
-- [X] Rspecにテストケースを全て書く
-- [X]テストexampleの粒度を細かくする
-- [X]user,ticketのrequestテストをパスさせる
-- [X]URLを全て修正する
-- [X]transitionテーブルは外部キーでアソシエーションする(ticket_idがticketに、user_idがsenderに入るようにする)
-- [X]transitionの外部キーはuser_idとticket_idは継承するようにする
-- [X]http://user/:id/tickets/:id/transtionsの譲渡履歴は昇順で表示する
-  
-## 例外処理に対する耐性
-- [X]ユーザーが所持していないチケットは送信できないようにする
-- [X]自分自身にチケットを送れないようにする
-- [X]http://users/:id/tickets/:idでuser_idに紐付かないticket_idは検索してもエラーになる容姿する
-- [X]存在しないidが入力された時の例外処理をコントローラに記述する
-  
+# 今後のアクション
 ## リファクタリング
 - [X]譲渡ロジック(withdraw&deposit)をモデルに移す(update_attributeはバリデーション検証がないため、なるべく使わないようにする)
 - [X]transfer_jsonロジックをメタプロで共通化できないか考える
-- []複数クエリのリクエストを直す
-- []transitionsコントローラのticket_existでunpermit user_id,ticket_idを直す
-- []transitionsのcreateのN+1問題を解決する(createアクション)
-- []transitionのrequestテストケース(create)を描き直す
+- [X]複数クエリのリクエストを直す
+- [X]transitionsコントローラのticket_existでunpermit user_id,ticket_idを直す
+- [X]transitionsのcreateのN+1問題を解決する(createアクション)
+- [X]transitionのrequestテストケース(create)を描き直す
+- [X]permitにキーを入れる
+- [X]READMEを描き直す
 
 ## +α
 - []http://user/:id/tickets/:id/transtionsのidは配列で渡せるようにし、複数のチケットを一斉送信できるようにする
 - []ticketsテーブルのstatus_idは他の人が見てわかるようにする(テーブル設計状態遷移)
   - ticketの一覧は、有効なチケットの中で、event_dateが本日の日付に近いものを優先的に並べる
 
-## 質問
-### ソースコード
-- controllerのリダイレクトが複雑ではないか？
-- updateでデータベースのカラムを更新しているが、問題ないか？
-- transfer_jsonを汎用的なモジュールにしたが、大丈夫か？
-- whereで空配列を返しており、無効なリクエストとデータが存在しないの区別がつかないが問題ないか？
-  - whereを使う or 返り値のActiveRerationを判別してeachを使うかどうかの条件分岐を行う
-
-### Rspec
-- []modelのバリデーションテストにて外部キーのnullテストをすべきか？
-  - 外部キーに直接nullを挿入することができない
-- []外部キーには全て、null false条件をつけるべきか？
-- []http:/users/:id/tickets/:id/transitions/:idなどの時、user_id,ticket_idを毎回テストしなければならないか？
-  - どこに記述すべきか？
+# 実装した案、実装しなかった案
 
 ## 実装した案
 - イベント系のチケットを想定しており、イベント当日にチケットのステータスが使用可となる
 - ticketの一覧は、有効なチケットの中で、event_dateが本日の日付に近いものを優先的に並べる
-- 
+  
 ## 実装しなかった案
 - チケット譲渡を配列で複数選択できるようにする
   - メリット:

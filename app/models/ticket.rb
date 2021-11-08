@@ -10,6 +10,7 @@ class Ticket < ApplicationRecord
     validates :event_date
     validates :category_id, numericality: { greater_than: 0, less_than: 6 }
     validates :status_id, numericality: { greater_than: 0, less_than: 4 }
+    # validates :user
   end
 
 

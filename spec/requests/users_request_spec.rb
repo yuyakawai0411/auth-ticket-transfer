@@ -18,14 +18,6 @@ RSpec.describe "Users", type: :request do
         expect(json['data'][0]['email']).to eq(user.email)
         expect(json['data'][0]['phone_number']).to eq(user.phone_number)
       end
-      it 'user_otherに正しい値がある' do
-        get '/users'
-        json = JSON.parse(response.body)
-        expect(json['data'][1]['id']).to eq(user_other.id)
-        expect(json['data'][1]['nickname']).to eq(user_other.nickname)
-        expect(json['data'][1]['email']).to eq(user_other.email)
-        expect(json['data'][1]['phone_number']).to eq(user_other.phone_number)
-      end
       it 'HTTP200が返される' do
         get '/users'
         json = JSON.parse(response.body)

@@ -21,16 +21,6 @@ RSpec.describe "Tickets", type: :request do
         expect(json['data'][0]['status_id']).to eq(ticket.status.name)
         expect(json['data'][0]['user_id']).to eq(ticket.user.nickname)
       end
-      it 'ticket_otherに正しい値がある' do
-        get "/users/#{user.id}/tickets"
-        json = JSON.parse(response.body)
-        expect(json['data'][1]['id']).to eq(ticket_other.id)
-        expect(json['data'][1]['ticket_name']).to eq(ticket_other.ticket_name)
-        # expect(json['data'][1]['event_date']).to eq(ticket_other.event_date)
-        expect(json['data'][1]['category_id']).to eq(ticket_other.category.name)
-        expect(json['data'][1]['status_id']).to eq(ticket_other.status.name)
-        expect(json['data'][1]['user_id']).to eq(ticket_other.user.nickname)
-      end
       it 'HTTP200が返される' do
         get "/users/#{user.id}/tickets"
         json = JSON.parse(response.body)

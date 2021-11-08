@@ -24,7 +24,7 @@ class TransitionsController < ApplicationController
   end
 
   def create
-    @transfer = Transition.new(transfer_ticket_params) #Unpermitted parameters: :user_id, :ticket_id
+    @transfer = Transition.new(transfer_ticket_params) 
     if @transfer.invalid?
       render json: { status: 404, message: '送り手を選択してください' } 
     elsif @recever.id == @user.id
@@ -60,7 +60,7 @@ class TransitionsController < ApplicationController
   end
 
   def transfer_ticket_params
-    params.permit(:recever_id).merge(ticket_id: params[:ticket_id], sender_id: params[:user_id])
+    params.permit(:recever_id, :ticket_id).merge(sender_id: params[:user_id])
   end
 
   def transfer_to_json(transition_data)
