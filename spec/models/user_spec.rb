@@ -14,22 +14,22 @@ RSpec.describe User, type: :model do
       it 'nicknameが空では登録できない' do
         user.nickname = ''
         user.valid?
-        is_expected.to include 
+        is_expected.to include "Nickname can't be blank"
       end
       it 'emailが空では登録できない' do
         user.email = ''
         user.valid?
-        is_expected.to include 
+        is_expected.to include "Email can't be blank"
       end
       it 'passwordが空では登録できない' do
         user.password = ''
         user.valid?
-        is_expected.to include 
+        is_expected.to include "Password can't be blank"
       end
       it 'phone_numberが空では登録できない' do
         user.phone_number = ''
         user.valid?
-        is_expected.to include 
+        is_expected.to include "Phone number can't be blank"
       end
     end
   end

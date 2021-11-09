@@ -1,59 +1,60 @@
 class TicketsController < ApplicationController
-  before_action :set_user_info, only: [:index, :show]
+  before_action :user_exist?, only: [:index, :show]
 
   def index
     @tickets = @user.tickets
-    if @tickets.nil?
+    if @tickets.blank?
       render json: { status: 404, message: 'チケットは持っていません' }
     else
-      transfer_to_json
+      transfer_to_json(@tickets)
       render json: { status: 200, data: @data }
     end
   end
 
   def show
     @ticket = @user.tickets.find_by(id: params[:id])
-    if @ticket.nil?
-      render json: { status: 404, message: 'チケットは持っていません' }
+    if @ticket.blank?
+      render json: { status: 404, message: '存在しないチケットです' }
     else
-      single_transfer_to_json
+      transfer_to_json(@ticket)
       render json: { status: 200, data: @data }
     end
   end
 
-
   private
 
-  def set_user_info
-    @user = User.find(params[:user_id])
+  def user_exist?
+    @user = User.find_by(id: params[:user_id])
+    if @user.blank? 
+      render json: { status: 404, message: '存在しないユーザーです' } 
+    end
   end
 
-  def transfer_to_json
+  def transfer_to_json(ticket_data)
     @data = []
-    @tickets.each do |ticket|
+    if ticket_data.is_a?(ActiveRecord::Relation)
+      ticket_data.each do |ticket|
+        @data << {
+          id: ticket.id,
+          ticket_name: ticket.ticket_name,
+          event_date: ticket.event_date,
+          category_id: ticket.category.name,
+          status_id: ticket.status.name,
+          user_id: ticket.user.nickname,
+          created_at: Time.parse(ticket.created_at.to_s).to_i
+        }
+      end
+    else
       @data << {
-        id: ticket.id,
-        ticket_name: ticket.ticket_name,
-        event_date: ticket.event_date,
-        category: ticket.category.name,
-        status: ticket.status.name,
-        created_at: Time.parse(ticket.created_at.to_s).to_i
+        id: ticket_data.id,
+        ticket_name: ticket_data.ticket_name,
+        event_date: ticket_data.event_date,
+        category_id: ticket_data.category.name,
+        status_id: ticket_data.status.name,
+        user_id: ticket_data.user.nickname,
+        created_at: Time.parse(ticket_data.created_at.to_s).to_i
       }
     end
-    @data.to_json
-  end
-
-  def single_transfer_to_json
-    @data = []
-      @data << {
-        id: @ticket.id,
-        ticket_name: @ticket.ticket_name,
-        event_date: @ticket.event_date,
-        category: @ticket.category.name,
-        status: @ticket.status.name,
-        created_at: Time.parse(@ticket.created_at.to_s).to_i
-      }
-    @data.to_json
   end
 
 end
