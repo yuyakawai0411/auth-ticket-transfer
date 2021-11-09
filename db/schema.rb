@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_03_232602) do
+ActiveRecord::Schema.define(version: 2021_11_09_025728) do
+
+  create_table "status_transitions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "ticket_id", null: false
+    t.integer "before", null: false
+    t.integer "after", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["ticket_id"], name: "index_status_transitions_on_ticket_id"
+  end
 
   create_table "tickets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "ticket_name", null: false
@@ -43,6 +52,7 @@ ActiveRecord::Schema.define(version: 2021_11_03_232602) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "status_transitions", "tickets"
   add_foreign_key "tickets", "users"
   add_foreign_key "transitions", "tickets"
   add_foreign_key "transitions", "users", column: "recever_id"

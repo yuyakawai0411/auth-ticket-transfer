@@ -21,7 +21,21 @@ class TicketsController < ApplicationController
     end
   end
 
+  def create
+    @ticket = Ticket.new(ticket_params)
+    if @ticket.invalid?
+      render json: { status: 404, message: 'チケット情報を全て入力してください' } 
+    else
+      transfer_to_json(@ticket)
+      render json: { status: 200, data: @data }
+    end
+  end
+
   private
+
+  def ticket_params
+    params.permit(:ticket_name, :event_date, :category_id, :status_id, :user_id)
+  end
 
   def user_exist?
     @user = User.find_by(id: params[:user_id])
