@@ -10,11 +10,21 @@ class Transition < ApplicationRecord
   end
   validate :recever_available?
 
-  def self.transfer(transfer, ticket)
+  def transfer(ticket)
     ActiveRecord::Base.transaction do
-      ticket.update_attribute(:user_id, transfer[:recever_id]) 
-      transfer.save!
+      ticket.update_attribute(:user_id, self[:recever_id]) 
+      self.save!
     end
+  end
+
+  def transfer_to_json
+    data = {
+      id: self.id,
+      ticket_id: self.ticket.ticket_name,
+      sender_id: self.sender.nickname,
+      recever_id: self.recever.nickname,
+      created_at: Time.parse(self.created_at.to_s).to_i
+    }
   end
 
   private

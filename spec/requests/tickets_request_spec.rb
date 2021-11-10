@@ -49,20 +49,15 @@ RSpec.describe "Tickets", type: :request do
   let!(:ticket) { FactoryBot.create(:ticket, user_id: user.id) }
   let!(:ticket_other) { FactoryBot.create(:ticket, user_id: user.id) }
     context 'userが保有するチケットを検索した時' do
-      it 'ticketデータが返される' do
+      it 'ticketが返され、正しい値がある' do
         get "/users/#{user.id}/tickets/#{ticket.id}"
         json = JSON.parse(response.body)
-        expect(json['data'].length).to eq(1)
-      end
-      it 'ticketに正しい値がある' do
-        get "/users/#{user.id}/tickets/#{ticket.id}"
-        json = JSON.parse(response.body)
-        expect(json['data'][0]['id']).to eq(ticket.id)
-        expect(json['data'][0]['ticket_name']).to eq(ticket.ticket_name)
-        # expect(json['data'][0]['event_date']).to eq(ticket.event_date)
-        expect(json['data'][0]['category_id']).to eq(ticket.category.name)
-        expect(json['data'][0]['status_id']).to eq(ticket.status.name)
-        expect(json['data'][0]['user_id']).to eq(ticket.user.nickname)
+        expect(json['data']['id']).to eq(ticket.id)
+        expect(json['data']['ticket_name']).to eq(ticket.ticket_name)
+        # expect(json['data']['event_date']).to eq(ticket.event_date)
+        expect(json['data']['category_id']).to eq(ticket.category.name)
+        expect(json['data']['status_id']).to eq(ticket.status.name)
+        expect(json['data']['user_id']).to eq(ticket.user.nickname)
       end
       it 'HTTP200が返される' do
         get "/users/#{user.id}/tickets/#{ticket.id}"
