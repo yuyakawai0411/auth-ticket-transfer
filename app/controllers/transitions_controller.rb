@@ -27,8 +27,6 @@ class TransitionsController < ApplicationController
     @transfer = Transition.new(transfer_ticket_params) 
     if @transfer.invalid?
       render json: { status: 404, message: '送り手を選択してください' } 
-    elsif @recever.id == @user.id
-      render json: { status: 404, message: '送り手に自分を選択できません' } 
     else
       Transition.transfer(@transfer, @ticket)
       transfer_to_json(@transfer)

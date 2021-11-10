@@ -64,7 +64,7 @@ RSpec.describe "Transitions", type: :request do
       it 'エラーメッセージが返される' do
         post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_sender.id } 
         json = JSON.parse(response.body)
-        expect(json['message']).to eq('送り手に自分を選択できません') 
+        expect(json['message']).to eq('送り手を選択してください') 
       end
       it 'ticketsテーブルでticketのuser_idがsenderのidのままである' do 
         get "/users/#{user_sender.id}/tickets/#{ticket.id}"
