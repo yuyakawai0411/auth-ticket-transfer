@@ -3,9 +3,9 @@ class Transition < ApplicationRecord
   belongs_to :sender, class_name: 'User', :foreign_key => 'sender_id'
   belongs_to :recever, class_name: 'User', :foreign_key => 'recever_id'
   with_options presence: true do
-    # validates :ticket
-    # validates :sender
-    validates :recever
+    validates :ticket
+    validates :sender_id
+    validates :recever_id
   end
 
   def self.transfer(transfer, ticket)
