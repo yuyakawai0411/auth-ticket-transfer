@@ -13,11 +13,7 @@ class Ticket < ApplicationRecord
     validates :user
   end
 
-  def ticket_exist?
-    if self.blank?
-      data = { status: 404, message: '存在しないチケットです' } 
-    end
-  end
+
 
   def transfer_to_json
     @data = []

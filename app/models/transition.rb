@@ -8,7 +8,7 @@ class Transition < ApplicationRecord
     validates :sender_id
     validates :recever_id
   end
-  validate :recever_myself?
+  validate :recever_available?
 
   def self.transfer(transfer, ticket)
     ActiveRecord::Base.transaction do
@@ -18,8 +18,11 @@ class Transition < ApplicationRecord
   end
 
   private
-  def recever_myself?
-    if self[:sender_id] == self[:recever_id]
+  def recever_available?
+    recever = User.find_by(id: self[:recever_id])
+    if recever.blank?
+      errors.add(:recever_id, "doesn't exist")
+    elsif self[:sender_id] == self[:recever_id]
       errors.add(:recever_id, "can't select myself")
     end
   end

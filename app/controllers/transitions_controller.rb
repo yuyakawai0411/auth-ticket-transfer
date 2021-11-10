@@ -1,7 +1,7 @@
 class TransitionsController < ApplicationController
   before_action :user_exist?, only: [:index, :show, :create]
   before_action :ticket_exist?, only: [:index, :show, :create]
-  before_action :recever_exist?, only: [:create]
+  # before_action :recever_exist?, only: [:create]
 
   def index
     @transitions = @ticket.transitions.includes([:sender, :recever]).order(created_at: 'DESC')
@@ -50,12 +50,12 @@ class TransitionsController < ApplicationController
     end
   end
 
-  def recever_exist?
-    @recever = User.find_by(id: params[:recever_id])
-    if @recever.blank?
-      render json: { status: 404, message: '送り手は存在しないユーザーです' } 
-    end
-  end
+  # def recever_exist?
+  #   @recever = User.find_by(id: params[:recever_id])
+  #   if @recever.blank?
+  #     render json: { status: 404, message: '送り手は存在しないユーザーです' } 
+  #   end
+  # end
 
   def transfer_ticket_params
     params.permit(:recever_id, :ticket_id).merge(sender_id: params[:user_id])
