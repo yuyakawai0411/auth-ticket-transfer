@@ -29,6 +29,7 @@ class TicketsController < ApplicationController
     if @ticket.invalid?
       render json: { status: 404, message: 'チケット情報を全て入力してください' } 
     else
+      @ticket.save
       @data = @ticket.transfer_to_json
       render json: { status: 200, data: @data }
     end
@@ -37,7 +38,7 @@ class TicketsController < ApplicationController
   private
 
   def ticket_params
-    params.permit(:ticket_name, :event_date, :category_id, :status_id, :user_id)
+    params.permit(:ticket_name, :event_date, :category_id, :user_id, :event_id).merge(status_id: 1)
   end
 
   def user_exist?
