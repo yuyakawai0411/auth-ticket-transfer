@@ -5,5 +5,6 @@ FactoryBot.define do
     category_id     { Faker::Number.between(from: 1, to: 5) }
     status_id       { Faker::Number.between(from: 1, to: 3) }
     association :user, factory: :user
+    association :event, factory: :event
   end
 end

@@ -30,18 +30,13 @@ RSpec.describe "Users", type: :request do
   let!(:user) { FactoryBot.create(:user) } 
   let!(:user_other) { FactoryBot.create(:user) } 
     context '存在するユーザーを検索する時' do
-      it 'userデータが返される' do
-        get "/users/#{user.id}"
-        json = JSON.parse(response.body)
-        expect(json['data'].length).to eq(1)
-      end
       it 'userに正しい値がある' do
         get "/users/#{user.id}"
         json = JSON.parse(response.body)
-        expect(json['data'][0]['id']).to eq(user.id)
-        expect(json['data'][0]['nickname']).to eq(user.nickname)
-        expect(json['data'][0]['email']).to eq(user.email)
-        expect(json['data'][0]['phone_number']).to eq(user.phone_number)
+        expect(json['data']['id']).to eq(user.id)
+        expect(json['data']['nickname']).to eq(user.nickname)
+        expect(json['data']['email']).to eq(user.email)
+        expect(json['data']['phone_number']).to eq(user.phone_number)
       end
       it 'HTTP200が返される' do
         get "/users/#{user.id}"
