@@ -4,7 +4,6 @@ class Ticket < ApplicationRecord
   has_many :transitions
   has_many :status_transitions
   extend ActiveHash::Associations::ActiveRecordExtensions
-  belongs_to :category
   belongs_to :status
 
   with_options presence: true do

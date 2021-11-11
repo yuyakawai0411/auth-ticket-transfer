@@ -1,6 +1,9 @@
 class Event < ApplicationRecord
   has_many :tickets
   
+  extend ActiveHash::Associations::ActiveRecordExtensions
+  belongs_to :category
+
   with_options presence: true do
     validates :name
     validates :owner
