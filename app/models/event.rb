@@ -7,6 +7,8 @@ class Event < ApplicationRecord
   with_options presence: true do
     validates :name
     validates :owner
+    validates :date
+    validates :category_id, numericality: { greater_than: 0, less_than: 6 }
   end
 
   def transfer_to_json

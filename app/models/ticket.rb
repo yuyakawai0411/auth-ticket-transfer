@@ -7,14 +7,11 @@ class Ticket < ApplicationRecord
   belongs_to :status
 
   with_options presence: true do
-    validates :ticket_name
-    validates :event_date
-    validates :category_id, numericality: { greater_than: 0, less_than: 6 }
     validates :status_id, numericality: { greater_than: 0, less_than: 4 }
     validates :user
+    validates :event
   end
   validate :user_available?
-  validate :date_after_today
   
 
   def transfer_to_json
@@ -34,14 +31,6 @@ class Ticket < ApplicationRecord
     user = User.find_by(id: self[:user_id])
     if user.blank?
       errors.add(:user_id, "doesn't exist")
-    end
-  end
-
-  def date_after_today
-    if self[:event_date].blank?
-      errors.add(:event_date, "can't be blank")
-    elsif self[:event_date] < Date.today
-      errors.add(:event_date, "doesn't before today")
     end
   end
 
