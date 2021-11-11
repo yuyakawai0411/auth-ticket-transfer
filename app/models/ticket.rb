@@ -14,6 +14,8 @@ class Ticket < ApplicationRecord
     validates :status_id, numericality: { greater_than: 0, less_than: 4 }
     validates :user
   end
+  validate :user_available?
+  validate :date_after_today
   
 
   def transfer_to_json
@@ -26,6 +28,22 @@ class Ticket < ApplicationRecord
       user_id: self.user.nickname,
       created_at: Time.parse(self.created_at.to_s).to_i
     }
+  end
+
+  private
+  def user_available?
+    user = User.find_by(id: self[:user_id])
+    if user.blank?
+      errors.add(:user_id, "doesn't exist")
+    end
+  end
+
+  def date_after_today
+    if self[:event_date].blank?
+      errors.add(:event_date, "can't be blank")
+    elsif self[:event_date] < Date.today
+      errors.add(:event_date, "doesn't before today")
+    end
   end
 
 end
