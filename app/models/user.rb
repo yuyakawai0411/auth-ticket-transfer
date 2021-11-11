@@ -10,4 +10,13 @@ class User < ApplicationRecord
     validates :phone_number
   end
 
+  def transfer_to_json
+    data = {
+      id: self.id,
+      nickname: self.nickname,
+      email: self.email,
+      phone_number: self.phone_number
+    }
+  end
+
 end

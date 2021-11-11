@@ -51,11 +51,6 @@ RSpec.describe Ticket, type: :model do
         ticket.valid?
         is_expected.to include "Status must be less than 4"
       end
-      # it 'user_idが空では取得できない' do
-      #   ticket.user_id = ''
-      #   ticket.valid?
-      #   is_expected.to include "User can't be blank"
-      # end
     end
   end
 end

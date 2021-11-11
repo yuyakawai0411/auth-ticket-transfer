@@ -1,4 +1,13 @@
 class StatusTransition < ApplicationRecord
+  belongs_to :ticket
+
+  with_options presence: true do
+    validates :ticket
+    validates :before
+    validates :after
+  end
+
+
   def self.ticket_available?
     tickets_available = Ticket.where(status_id: 1).where('event_date <= ?', Date.today) 
     unless tickets_available.blank?

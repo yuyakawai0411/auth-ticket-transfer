@@ -15,18 +15,18 @@ RSpec.describe "Transitions", type: :request do
       it 'transitionに正しい値がある' do
         post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_recever.id } 
         json = JSON.parse(response.body)
-        expect(json['data'][0]['ticket_id']).to eq(ticket.ticket_name)
-        expect(json['data'][0]['sender_id']).to eq(user_sender.nickname)
-        expect(json['data'][0]['recever_id']).to eq(user_recever.nickname)
+        expect(json['data']['ticket_id']).to eq(ticket.ticket_name)
+        expect(json['data']['sender_id']).to eq(user_sender.nickname)
+        expect(json['data']['recever_id']).to eq(user_recever.nickname)
       end
       it 'ticketsテーブルでticketのuser_idがreceverのidになる' do
         get "/users/#{user_sender.id}/tickets/#{ticket.id}"
         json = JSON.parse(response.body)
-        expect(json['data'][0]['user_id']).to eq(user_sender.nickname)
+        expect(json['data']['user_id']).to eq(user_sender.nickname)
         post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_recever.id } 
         get "/users/#{user_recever.id}/tickets/#{ticket.id}"
         json = JSON.parse(response.body)
-        expect(json['data'][0]['user_id']).to eq(user_recever.nickname) 
+        expect(json['data']['user_id']).to eq(user_recever.nickname) 
       end
     end
     
@@ -41,17 +41,17 @@ RSpec.describe "Transitions", type: :request do
         user_not_exist = user_sender.id + user_recever.id
         post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_not_exist }
         json = JSON.parse(response.body)
-        expect(json['message']).to eq('送り手は存在しないユーザーです') 
+        expect(json['message']).to eq('送り手を選択してください') 
       end
       it 'ticketsテーブルでticketのuser_idがsenderのidのままである' do 
         user_not_exist = user_sender.id + user_recever.id
         get "/users/#{user_sender.id}/tickets/#{ticket.id}"
         json = JSON.parse(response.body)
-        expect(json['data'][0]['user_id']).to eq(user_sender.nickname)
+        expect(json['data']['user_id']).to eq(user_sender.nickname)
         post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_not_exist }
         get "/users/#{user_sender.id}/tickets/#{ticket.id}"
         json = JSON.parse(response.body)
-        expect(json['data'][0]['user_id']).to eq(user_sender.nickname)
+        expect(json['data']['user_id']).to eq(user_sender.nickname)
       end
     end
 
@@ -64,41 +64,18 @@ RSpec.describe "Transitions", type: :request do
       it 'エラーメッセージが返される' do
         post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_sender.id } 
         json = JSON.parse(response.body)
-        expect(json['message']).to eq('送り手に自分を選択できません') 
+        expect(json['message']).to eq('送り手を選択してください') 
       end
       it 'ticketsテーブルでticketのuser_idがsenderのidのままである' do 
         get "/users/#{user_sender.id}/tickets/#{ticket.id}"
         json = JSON.parse(response.body)
-        expect(json['data'][0]['user_id']).to eq(user_sender.nickname)
+        expect(json['data']['user_id']).to eq(user_sender.nickname)
         post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_sender.id } 
         get "/users/#{user_sender.id}/tickets/#{ticket.id}"
         json = JSON.parse(response.body)
-        expect(json['data'][0]['user_id']).to eq(user_sender.nickname)
+        expect(json['data']['user_id']).to eq(user_sender.nickname)
       end
     end
-
-    context 'receverを入力しなかった時' do
-      it 'transitionモデルのカウントが増えない' do
-        expect{
-          post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: '' } 
-          }. to change(Transition, :count).by(0)
-      end
-      it 'エラーメッセージが返される' do
-        post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions"
-        json = JSON.parse(response.body)
-        expect(json['message']).to eq('送り手は存在しないユーザーです') 
-      end
-      it 'ticketsテーブルでticketのuser_idがsenderのidのままである' do 
-        get "/users/#{user_sender.id}/tickets/#{ticket.id}"
-        json = JSON.parse(response.body)
-        expect(json['data'][0]['user_id']).to eq(user_sender.nickname)
-        post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_sender.id } 
-        get "/users/#{user_sender.id}/tickets/#{ticket.id}"
-        json = JSON.parse(response.body)
-        expect(json['data'][0]['user_id']).to eq(user_sender.nickname)
-      end
-    end
-
   end
 
   describe 'GET #index' do
@@ -164,18 +141,14 @@ RSpec.describe "Transitions", type: :request do
   let!(:ticket) { FactoryBot.create(:ticket, user_id: user_sender.id) }
   let!(:transition) { FactoryBot.create(:transition, ticket_id: ticket.id, sender_id: user_sender.id, recever_id: user_recever.id) }
     context '存在するトランザクションを検索した時' do
-      it 'transitionが返される' do
-        get "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions/#{transition.id}"
-        json = JSON.parse(response.body)
-        expect(json['data'].length).to eq(1)
-      end
+
       it 'transitionに正しい値がある' do
         get "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions/#{transition.id}"
         json = JSON.parse(response.body)
-        expect(json['data'][0]['id']).to eq(transition.id)
-        expect(json['data'][0]['ticket_id']).to eq(transition.ticket.ticket_name)
-        expect(json['data'][0]['sender_id']).to eq(transition.sender.nickname)
-        expect(json['data'][0]['recever_id']).to eq(transition.recever.nickname)
+        expect(json['data']['id']).to eq(transition.id)
+        expect(json['data']['ticket_id']).to eq(transition.ticket.ticket_name)
+        expect(json['data']['sender_id']).to eq(transition.sender.nickname)
+        expect(json['data']['recever_id']).to eq(transition.recever.nickname)
       end
       it 'HTTP200が返される' do
         get "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions/#{transition.id}"

@@ -5,7 +5,10 @@ class UsersController < ApplicationController
     if @users.blank? 
       render json: { status: 404, message: 'ユーザー登録はありません' }
     else
-      transfer_to_json(@users)
+      @data = []
+      @users.each do |user|
+        @data << user.transfer_to_json
+      end
       render json: { status: 200, data: @data }
     end
   end
@@ -15,31 +18,8 @@ class UsersController < ApplicationController
     if @user.blank? 
       render json: { status: 404, message: '存在しないユーザーです' }
     else
-      transfer_to_json(@user)
+      @data = @user.transfer_to_json
       render json: { status: 200, data: @data }
-    end
-  end
-
-  private
-  
-  def transfer_to_json(user_data)
-    @data = []
-    if user_data.is_a?(ActiveRecord::Relation)
-      user_data.each do |user|
-        @data << {
-          id: user.id,
-          nickname: user.nickname,
-          email: user.email,
-          phone_number: user.phone_number
-        }
-      end
-    else
-      @data << {
-        id: user_data.id,
-        nickname: user_data.nickname,
-        email: user_data.email,
-        phone_number: user_data.phone_number
-      }
     end
   end
 
