@@ -136,13 +136,15 @@
 
 
 # テスト実施に使用した時間
-- 設計:4h
+- 設計:5h
 - コーディング:18h
 - リファクタリング:6h
 
 # 使用方法
 - rails db:create
 - rails db:seed
+- bundle exec whenever --update-crontab 
+- bundle exec whenever --clear-crontab
 
 
 # ユーザーサイド

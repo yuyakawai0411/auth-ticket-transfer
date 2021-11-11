@@ -1,6 +1,7 @@
 class Ticket < ApplicationRecord
   belongs_to :user
   has_many :transitions
+  has_many :status_transitions
   extend ActiveHash::Associations::ActiveRecordExtensions
   belongs_to :category
   belongs_to :status
