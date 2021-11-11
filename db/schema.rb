@@ -12,6 +12,13 @@
 
 ActiveRecord::Schema.define(version: 2021_11_09_025728) do
 
+  create_table "events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "owner", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "status_transitions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "ticket_id", null: false
     t.integer "before", null: false
@@ -27,8 +34,10 @@ ActiveRecord::Schema.define(version: 2021_11_09_025728) do
     t.integer "category_id", null: false
     t.integer "status_id", null: false
     t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["event_id"], name: "index_tickets_on_event_id"
     t.index ["user_id"], name: "index_tickets_on_user_id"
   end
 
@@ -53,6 +62,7 @@ ActiveRecord::Schema.define(version: 2021_11_09_025728) do
   end
 
   add_foreign_key "status_transitions", "tickets"
+  add_foreign_key "tickets", "events"
   add_foreign_key "tickets", "users"
   add_foreign_key "transitions", "tickets"
   add_foreign_key "transitions", "users", column: "recever_id"
