@@ -17,8 +17,8 @@ class Ticket < ApplicationRecord
   def transfer_to_json
     data = {
       id: self.id,
-      ticket_name: self.ticket_name,
-      event_date: self.event_date,
+      name: self.name,
+      date: self.date,
       category_id: self.category.name,
       status_id: self.status.name,
       user_id: self.user.nickname,

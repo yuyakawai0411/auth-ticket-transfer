@@ -20,7 +20,7 @@ class Transition < ApplicationRecord
   def transfer_to_json
     data = {
       id: self.id,
-      ticket_id: self.ticket.ticket_name,
+      ticket_id: self.ticket.name,
       sender_id: self.sender.nickname,
       recever_id: self.recever.nickname,
       created_at: Time.parse(self.created_at.to_s).to_i
