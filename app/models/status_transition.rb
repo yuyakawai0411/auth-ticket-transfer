@@ -9,7 +9,7 @@ class StatusTransition < ApplicationRecord
 
 
   def self.ticket_available?
-    tickets_available = Ticket.where(status_id: 1).where('date <= ?', Date.today) 
+    tickets_available = Ticket.where(status_id: 1).where('availabilty_date <= ?', Date.today) 
     unless tickets_available.blank?
       tickets_available.each do |ticket| 
         ActiveRecord::Base.transaction do
@@ -23,7 +23,7 @@ class StatusTransition < ApplicationRecord
   end
 
   def self.ticket_expired?
-    tickets_expired = Ticket.where(status_id: 2).where('date < ?', Date.today)
+    tickets_expired = Ticket.where(status_id: 2).where('availabilty_date < ?', Date.today)
     unless tickets_expired.blank?
       tickets_expired.each do |ticket| 
         ActiveRecord::Base.transaction do
