@@ -15,9 +15,8 @@ RSpec.describe "Tickets", type: :request do
         get "/users/#{user.id}/tickets"
         json = JSON.parse(response.body)
         expect(json['data'][0]['id']).to eq(ticket.id)
-        expect(json['data'][0]['ticket_name']).to eq(ticket.ticket_name)
-        # expect(json['data'][0]['event_date']).to eq(ticket.event_date)
-        expect(json['data'][0]['category_id']).to eq(ticket.category.name)
+        expect(json['data'][0]['name']).to eq(ticket.event.name)
+        expect(json['data'][0]['category_id']).to eq(ticket.event.category.name)
         expect(json['data'][0]['status_id']).to eq(ticket.status.name)
         expect(json['data'][0]['user_id']).to eq(ticket.user.nickname)
       end
@@ -53,9 +52,8 @@ RSpec.describe "Tickets", type: :request do
         get "/users/#{user.id}/tickets/#{ticket.id}"
         json = JSON.parse(response.body)
         expect(json['data']['id']).to eq(ticket.id)
-        expect(json['data']['ticket_name']).to eq(ticket.ticket_name)
-        # expect(json['data']['event_date']).to eq(ticket.event_date)
-        expect(json['data']['category_id']).to eq(ticket.category.name)
+        expect(json['data']['name']).to eq(ticket.event.name)
+        expect(json['data']['category_id']).to eq(ticket.event.category.name)
         expect(json['data']['status_id']).to eq(ticket.status.name)
         expect(json['data']['user_id']).to eq(ticket.user.nickname)
       end
@@ -101,25 +99,25 @@ RSpec.describe "Tickets", type: :request do
     let!(:event) { FactoryBot.create(:event) }
     let!(:user) { FactoryBot.create(:user) }
     let(:user_not_exist) { FactoryBot.build(:user) }
-    let(:ticket) { FactoryBot.create(:ticket, ticket_name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, status_id: 1, event_id: event.id, user_id: user.id) }
-    # let(:ticket_not_exist_user) { ticket_name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, event_id: event.id, user_id: user_not_exist.id }
+    let(:ticket) { FactoryBot.create(:ticket, name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, status_id: 1, event_id: event.id, user_id: user.id) }
+    # let(:ticket_not_exist_user) { name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, event_id: event.id, user_id: user_not_exist.id }
       context '存在するユーザーにチケットを発券した時' do
         it 'Ticketモデルのカウントが+1される' do
           expect{
-            post "/events/#{event.id}/tickets", params:  { ticket_name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, status_id: 1, event_id: event.id, user_id: user.id }
+            post "/events/#{event.id}/tickets", params:  { name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, status_id: 1, event_id: event.id, user_id: user.id }
           }.to change(Ticket, :count).by(1)
         end
         it 'ticketに正しい値がある' do
-          post "/events/#{event.id}/tickets", params:  { ticket_name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, status_id: 1, event_id: event.id, user_id: user.id } 
+          post "/events/#{event.id}/tickets", params:  { name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, status_id: 1, event_id: event.id, user_id: user.id } 
           json = JSON.parse(response.body)
-          expect(json['data']['ticket_name']).to eq(ticket.ticket_name)
+          expect(json['data']['name']).to eq(ticket.name)
           # expect(json['data'][0]['event_date']).to eq(ticket.event_date)
           expect(json['data']['category_id']).to eq(ticket.category.name)
           expect(json['data']['status_id']).to eq(ticket.status.name)
           expect(json['data']['user_id']).to eq(ticket.user.nickname)
         end
         it 'HTTP200が返される' do
-          post "/events/#{event.id}/tickets", params:  { ticket_name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, status_id: 1, event_id: event.id, user_id: user.id }
+          post "/events/#{event.id}/tickets", params:  { name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, status_id: 1, event_id: event.id, user_id: user.id }
           json = JSON.parse(response.body)
           expect(json['status']).to eq(200)
         end
@@ -127,12 +125,12 @@ RSpec.describe "Tickets", type: :request do
   
       context '存在しないユーザーにチケットを発券した時' do
         it 'エラーメッセージが返される' do
-          post "/events/#{event.id}/tickets", params:  { ticket_name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, status_id: 1, event_id: event.id, user_id: user_not_exist.id }
+          post "/events/#{event.id}/tickets", params:  { name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, status_id: 1, event_id: event.id, user_id: user_not_exist.id }
           json = JSON.parse(response.body)
           expect(json['message']).to eq('チケット情報を全て入力してください') 
         end
         it 'HTTP404が返される' do
-          post "/events/#{event.id}/tickets", params: { ticket_name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, status_id: 1, event_id: event.id, user_id: user_not_exist.id }
+          post "/events/#{event.id}/tickets", params: { name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, status_id: 1, event_id: event.id, user_id: user_not_exist.id }
           json = JSON.parse(response.body)
           expect(json['status']).to eq(404) 
         end

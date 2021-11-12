@@ -17,9 +17,9 @@ class Ticket < ApplicationRecord
   def transfer_to_json
     data = {
       id: self.id,
-      name: self.name,
-      date: self.date,
-      category_id: self.category.name,
+      name: self.event.name,
+      date: self.event.date,
+      category_id: self.event.category.name,
       status_id: self.status.name,
       user_id: self.user.nickname,
       created_at: Time.parse(self.created_at.to_s).to_i
