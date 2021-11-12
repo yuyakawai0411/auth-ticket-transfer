@@ -7,7 +7,7 @@ User.create!(id: 1, nickname: 'yuya', email:'yuya@com' ,password: 'yuya',phone_n
 User.create!(id: 2, nickname: 'kinmedai', email:'kinmedai@com' ,password: 'kinmedai',phone_number: '080-1234-5678')
 
 # チケットサンプルデータ
-Ticket.create!(id: 1, status_id: 1, user_id: 1, event_id: 1)
-Ticket.create!(id: 2, status_id: 1, user_id: 1, event_id: 1)
-Ticket.create!(id: 3, status_id: 1, user_id: 1, event_id: 2)
-Ticket.create!(id: 4, status_id: 1, user_id: 1, event_id: 2)
+Ticket.create!(id: 1, availabilty_date: '2022-8-19', status_id: 1, user_id: 1, event_id: 1)
+Ticket.create!(id: 2, availabilty_date: '2022-8-19', status_id: 1, user_id: 1, event_id: 1)
+Ticket.create!(id: 3, availabilty_date: '2020-12-14', status_id: 1, user_id: 1, event_id: 2)
+Ticket.create!(id: 4, availabilty_date: '2020-12-14', status_id: 1, user_id: 1, event_id: 2)

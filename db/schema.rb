@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 2021_11_09_025728) do
   end
 
   create_table "tickets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.date "availabilty_date", null: false
     t.integer "status_id", null: false
     t.bigint "user_id", null: false
     t.bigint "event_id", null: false
