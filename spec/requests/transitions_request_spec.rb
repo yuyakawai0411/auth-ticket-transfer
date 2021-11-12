@@ -15,7 +15,7 @@ RSpec.describe "Transitions", type: :request do
       it 'transitionに正しい値がある' do
         post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_recever.id } 
         json = JSON.parse(response.body)
-        expect(json['data']['ticket_id']).to eq(ticket.ticket_name)
+        expect(json['data']['ticket_id']).to eq(ticket.event.name)
         expect(json['data']['sender_id']).to eq(user_sender.nickname)
         expect(json['data']['recever_id']).to eq(user_recever.nickname)
       end
@@ -93,7 +93,7 @@ RSpec.describe "Transitions", type: :request do
         get "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions" #user_receverに変更したい
         json = JSON.parse(response.body)
         expect(json['data'][0]['id']).to eq(transition.id)
-        expect(json['data'][0]['ticket_id']).to eq(transition.ticket.ticket_name)
+        expect(json['data'][0]['ticket_id']).to eq(transition.ticket.event.name)
         expect(json['data'][0]['sender_id']).to eq(transition.sender.nickname)
         expect(json['data'][0]['recever_id']).to eq(transition.recever.nickname)
       end
@@ -146,7 +146,7 @@ RSpec.describe "Transitions", type: :request do
         get "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions/#{transition.id}"
         json = JSON.parse(response.body)
         expect(json['data']['id']).to eq(transition.id)
-        expect(json['data']['ticket_id']).to eq(transition.ticket.ticket_name)
+        expect(json['data']['ticket_id']).to eq(transition.ticket.event.name)
         expect(json['data']['sender_id']).to eq(transition.sender.nickname)
         expect(json['data']['recever_id']).to eq(transition.recever.nickname)
       end
