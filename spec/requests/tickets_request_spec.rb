@@ -99,7 +99,7 @@ RSpec.describe "Tickets", type: :request do
     let!(:event) { FactoryBot.create(:event) }
     let!(:user) { FactoryBot.create(:user) }
     let(:user_not_exist) { FactoryBot.build(:user) }
-    let(:ticket) { FactoryBot.build(:ticket, event_id: event.id, user_id: user.id) }
+    let(:ticket) { FactoryBot.build(:ticket, event_id: event.id, user_id: user.id, status_id: 1) }
     # let(:ticket_not_exist_user) { name: 'ジャンプフェスタ', event_date: '2022-08-22', category_id: 1, event_id: event.id, user_id: user_not_exist.id }
       context '存在するユーザーにチケットを発券した時' do
         it 'Ticketモデルのカウントが+1される' do
