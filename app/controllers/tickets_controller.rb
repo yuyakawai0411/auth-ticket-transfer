@@ -2,7 +2,7 @@ class TicketsController < ApplicationController
   before_action :user_exist?, only: [:index, :show]
 
   def index
-    @tickets = @user.tickets
+    @tickets = @user.tickets.includes(:event)
     if @tickets.blank?
       render json: { status: 404, message: 'チケットは持っていません' }
     else
