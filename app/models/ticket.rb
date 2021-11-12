@@ -7,6 +7,7 @@ class Ticket < ApplicationRecord
   belongs_to :status
 
   with_options presence: true do
+    validates :availabilty_date
     validates :status_id, numericality: { greater_than: 0, less_than: 4 }
     validates :user
     validates :event

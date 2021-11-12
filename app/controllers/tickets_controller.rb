@@ -35,7 +35,7 @@ class TicketsController < ApplicationController
   private
 
   def ticket_params
-    params.permit(:user_id, :event_id).merge(status_id: 1)
+    params.permit(:user_id, :event_id, :availabilty_date).merge(status_id: 1)
   end
 
   def user_exist?

@@ -104,11 +104,11 @@ RSpec.describe "Tickets", type: :request do
       context '存在するユーザーにチケットを発券した時' do
         it 'Ticketモデルのカウントが+1される' do
           expect{
-            post "/events/#{event.id}/tickets", params:  { status_id: 1, event_id: event.id, user_id: user.id }
+            post "/events/#{event.id}/tickets", params:  { availabilty_date: '2022-10-25', status_id: 1, event_id: event.id, user_id: user.id }
           }.to change(Ticket, :count).by(1)
         end
         it 'ticketに正しい値がある' do
-          post "/events/#{event.id}/tickets", params:  { status_id: 1, event_id: event.id, user_id: user.id } 
+          post "/events/#{event.id}/tickets", params:  { availabilty_date: '2022-10-25', status_id: 1, event_id: event.id, user_id: user.id } 
           json = JSON.parse(response.body)
           expect(json['data']['name']).to eq(ticket.event.name)
           # expect(json['data'][0]['event_date']).to eq(ticket.event_date)
@@ -117,7 +117,7 @@ RSpec.describe "Tickets", type: :request do
           expect(json['data']['user_id']).to eq(ticket.user.nickname)
         end
         it 'HTTP200が返される' do
-          post "/events/#{event.id}/tickets", params:  { status_id: 1, event_id: event.id, user_id: user.id }
+          post "/events/#{event.id}/tickets", params:  { availabilty_date: '2022-10-25', status_id: 1, event_id: event.id, user_id: user.id }
           json = JSON.parse(response.body)
           expect(json['status']).to eq(200)
         end
@@ -125,12 +125,12 @@ RSpec.describe "Tickets", type: :request do
   
       context '存在しないユーザーにチケットを発券した時' do
         it 'エラーメッセージが返される' do
-          post "/events/#{event.id}/tickets", params:  { status_id: 1, event_id: event.id, user_id: user_not_exist.id }
+          post "/events/#{event.id}/tickets", params:  { availabilty_date: '2022-10-25', status_id: 1, event_id: event.id, user_id: user_not_exist.id }
           json = JSON.parse(response.body)
           expect(json['message']).to eq('チケット情報を全て入力してください') 
         end
         it 'HTTP404が返される' do
-          post "/events/#{event.id}/tickets", params: { status_id: 1, event_id: event.id, user_id: user_not_exist.id }
+          post "/events/#{event.id}/tickets", params: { availabilty_date: '2022-10-25', status_id: 1, event_id: event.id, user_id: user_not_exist.id }
           json = JSON.parse(response.body)
           expect(json['status']).to eq(404) 
         end
