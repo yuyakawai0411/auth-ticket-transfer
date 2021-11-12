@@ -5,10 +5,7 @@ class UsersController < ApplicationController
     if @users.blank? 
       render json: { status: 404, message: 'ユーザー登録はありません' }
     else
-      @data = []
-      @users.each do |user|
-        @data << user.transfer_to_json
-      end
+      @data = @users.map{|x| x.transfer_to_json} 
       render json: { status: 200, data: @data }
     end
   end

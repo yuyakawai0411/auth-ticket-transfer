@@ -7,10 +7,7 @@ class TransitionsController < ApplicationController
     if @transitions.blank?
       render json: { status: 404, message: '譲渡履歴は存在しません' }
     else
-      @data = []
-      @transitions.each do |transition|
-        @data << transition.transfer_to_json
-      end
+      @data = @transitions.map{|x| x.transfer_to_json} 
       render json: { status: 200, data: @data }
     end
   end

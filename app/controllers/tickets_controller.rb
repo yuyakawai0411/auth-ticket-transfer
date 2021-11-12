@@ -6,10 +6,7 @@ class TicketsController < ApplicationController
     if @tickets.blank?
       render json: { status: 404, message: 'チケットは持っていません' }
     else
-      @data = []
-      @tickets.each do |ticket|
-        @data << ticket.transfer_to_json
-      end
+      @data = @tickets.map{|x| x.transfer_to_json} 
       render json: { status: 200, data: @data }
     end
   end
