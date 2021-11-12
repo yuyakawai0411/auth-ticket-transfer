@@ -15,7 +15,9 @@ class Event < ApplicationRecord
     data = {
       id: self.id,
       name: self.name,
-      owner: self.owner
+      owner: self.owner,
+      date: self.date,
+      category_id: self.category.name
     }
   end
 

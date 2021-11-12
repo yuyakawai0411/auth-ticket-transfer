@@ -16,6 +16,7 @@ RSpec.describe "Events", type: :request do
           expect(json['data'][0]['id']).to eq(event.id)
           expect(json['data'][0]['name']).to eq(event.name)
           expect(json['data'][0]['owner']).to eq(event.owner)
+          expect(json['data'][0]['category_id']).to eq(event.category.name)
         end
         it 'HTTP200が返される' do
           get '/events'
@@ -35,6 +36,7 @@ RSpec.describe "Events", type: :request do
           expect(json['data']['id']).to eq(event.id)
           expect(json['data']['name']).to eq(event.name)
           expect(json['data']['owner']).to eq(event.owner)
+          expect(json['data']['category_id']).to eq(event.category.name)
         end
         it 'HTTP200が返される' do
           get "/events/#{event.id}"
