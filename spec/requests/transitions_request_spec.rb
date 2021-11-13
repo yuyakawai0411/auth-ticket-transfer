@@ -124,7 +124,7 @@ RSpec.describe "Transitions", type: :request do
         user_not_exist = user_recever.id + 1
         get "/users/#{user_not_exist}/tickets/#{ticket.id}/transitions"
         json = JSON.parse(response.body)
-        expect(json['message']).to eq('存在しないユーザーです') 
+        expect(json['message']).to eq('存在しないチケットです') 
       end
       it 'HTTP404が返される' do
         user_not_exist = user_recever.id + 1
