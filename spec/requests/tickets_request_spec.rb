@@ -95,7 +95,7 @@ RSpec.describe "Tickets", type: :request do
     end
   end
 
-  describe 'GET #create' do
+  describe 'POST #create' do
     let!(:event) { FactoryBot.create(:event) }
     let!(:user) { FactoryBot.create(:user) }
     let(:user_not_exist) { FactoryBot.build(:user) }
@@ -127,7 +127,7 @@ RSpec.describe "Tickets", type: :request do
         it 'エラーメッセージが返される' do
           post "/events/#{event.id}/tickets", params:  { availabilty_date: '2022-10-25', status_id: 1, event_id: event.id, user_id: user_not_exist.id }
           json = JSON.parse(response.body)
-          expect(json['message']).to eq('チケット情報を全て入力してください') 
+          expect(json['message']).to include("User doesn't exist") 
         end
         it 'HTTP404が返される' do
           post "/events/#{event.id}/tickets", params: { availabilty_date: '2022-10-25', status_id: 1, event_id: event.id, user_id: user_not_exist.id }

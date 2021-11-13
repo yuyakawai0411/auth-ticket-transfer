@@ -26,7 +26,7 @@ class TicketsController < ApplicationController
   def create
     @ticket = Ticket.new(ticket_params)
     if @ticket.invalid?
-      render json: { status: 404, message: 'チケット情報を全て入力してください' } 
+      render json: { status: 404, message: @ticket.errors.full_messages } 
     else
       @ticket.save
       @data = @ticket.transfer_to_json

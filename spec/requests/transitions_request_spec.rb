@@ -41,7 +41,7 @@ RSpec.describe "Transitions", type: :request do
         user_not_exist = user_sender.id + user_recever.id
         post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_not_exist }
         json = JSON.parse(response.body)
-        expect(json['message']).to eq('送り手を選択してください') 
+        expect(json['message']).to include("Recever doesn't exist") 
       end
       it 'ticketsテーブルでticketのuser_idがsenderのidのままである' do 
         user_not_exist = user_sender.id + user_recever.id
@@ -64,7 +64,7 @@ RSpec.describe "Transitions", type: :request do
       it 'エラーメッセージが返される' do
         post "/users/#{user_sender.id}/tickets/#{ticket.id}/transitions", params: { recever_id: user_sender.id } 
         json = JSON.parse(response.body)
-        expect(json['message']).to eq('送り手を選択してください') 
+        expect(json['message']).to include("Recever can't select myself") 
       end
       it 'ticketsテーブルでticketのuser_idがsenderのidのままである' do 
         get "/users/#{user_sender.id}/tickets/#{ticket.id}"
