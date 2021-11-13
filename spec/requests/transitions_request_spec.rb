@@ -30,6 +30,11 @@ RSpec.describe "Transitions", type: :request do
         json = JSON.parse(response.body)
         expect(json['data']['user_id']).to eq(user_recever.nickname) 
       end
+      it 'HTTP201が返される' do
+        subject
+        json = JSON.parse(response.body)
+        expect(json['status']).to eq(201)
+      end
     end
     
     context 'receverに存在しないユーザーを選択した時' do
@@ -53,6 +58,11 @@ RSpec.describe "Transitions", type: :request do
         json = JSON.parse(response.body)
         expect(json['data']['user_id']).to eq(user_sender.nickname)
       end
+      it 'HTTP404が返される' do
+        subject
+        json = JSON.parse(response.body)
+        expect(json['status']).to eq(404)
+      end
     end
 
     context 'receverに自分自身を選択した時' do
@@ -75,6 +85,11 @@ RSpec.describe "Transitions", type: :request do
         get "/users/#{user_sender.id}/tickets/#{ticket.id}"
         json = JSON.parse(response.body)
         expect(json['data']['user_id']).to eq(user_sender.nickname)
+      end
+      it 'HTTP404が返される' do
+        subject
+        json = JSON.parse(response.body)
+        expect(json['status']).to eq(404)
       end
     end
   end

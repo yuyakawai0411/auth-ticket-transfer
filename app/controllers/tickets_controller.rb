@@ -30,7 +30,7 @@ class TicketsController < ApplicationController
     else
       @ticket.save
       @data = @ticket.transfer_to_json
-      render json: { status: 200, data: @data }
+      render json: { status: 201, data: @data }
     end
   end
 

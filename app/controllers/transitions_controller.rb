@@ -31,7 +31,7 @@ class TransitionsController < ApplicationController
     else
       @transfer.transfer(@ticket)
       @data = @transfer.transfer_to_json
-      render json: { status: 200, data: @data } 
+      render json: { status: 201, data: @data } 
     end
   end
 

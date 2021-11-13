@@ -121,7 +121,7 @@ RSpec.describe "Tickets", type: :request do
         it 'HTTP200が返される' do
           subject
           json = JSON.parse(response.body)
-          expect(json['status']).to eq(200)
+          expect(json['status']).to eq(201)
         end
       end
   
