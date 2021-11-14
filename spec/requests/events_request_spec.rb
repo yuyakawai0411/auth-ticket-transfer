@@ -53,7 +53,7 @@ RSpec.describe "Events", type: :request do
       it 'エラーメッセージが返される' do
         subject
         json = JSON.parse(response.body)
-        expect(json['message']).to eq('存在しないイベントです') 
+        expect(json['message']).to eq('登録されていないイベントです') 
       end
       it  'HTTP404が返される' do
         subject

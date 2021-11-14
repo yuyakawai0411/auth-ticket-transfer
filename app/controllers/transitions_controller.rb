@@ -2,7 +2,7 @@ class TransitionsController < ApplicationController
   before_action :ticket_exist?, only: [:index, :show, :create]
 
   def index
-    return render json: { status: 404, message: '存在しないチケットです' } if @ticket.blank?
+    return render json: { status: 404, message: '所持していないチケットです' } if @ticket.blank?
     @transitions = @ticket.transitions.includes([:sender, :recever]).order(created_at: 'DESC')
     if @transitions.blank?
       render json: { status: 404, message: '譲渡履歴は存在しません' }
@@ -13,7 +13,7 @@ class TransitionsController < ApplicationController
   end
 
   def show
-    return render json: { status: 404, message: '存在しないチケットです' } if @ticket.blank?
+    return render json: { status: 404, message: '所持していないチケットです' } if @ticket.blank?
     @transition = @ticket.transitions.includes([:sender, :recever]).find_by(id: params[:id])
     if @transition.blank?
       render json: { status: 404, message: '存在しない譲渡履歴です' }
@@ -24,7 +24,7 @@ class TransitionsController < ApplicationController
   end
 
   def create
-    return render json: { status: 404, message: '存在しないチケットです' } if @ticket.blank?
+    return render json: { status: 404, message: '所持していないチケットです' } if @ticket.blank?
     @transfer = Transition.new(transfer_ticket_params) 
     if @transfer.invalid?
       render json: { status: 422, message: @transfer.errors.full_messages } 
