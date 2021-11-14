@@ -27,7 +27,7 @@ class TransitionsController < ApplicationController
     return render json: { status: 404, message: '存在しないチケットです' } if @ticket.blank?
     @transfer = Transition.new(transfer_ticket_params) 
     if @transfer.invalid?
-      render json: { status: 404, message: @transfer.errors.full_messages } 
+      render json: { status: 422, message: @transfer.errors.full_messages } 
     else
       @transfer.transfer(@ticket)
       @data = @transfer.transfer_to_json

@@ -61,7 +61,7 @@ RSpec.describe "Transitions", type: :request do
       it 'HTTP404が返される' do
         subject
         json = JSON.parse(response.body)
-        expect(json['status']).to eq(404)
+        expect(json['status']).to eq(422)
       end
     end
 
@@ -89,7 +89,7 @@ RSpec.describe "Transitions", type: :request do
       it 'HTTP404が返される' do
         subject
         json = JSON.parse(response.body)
-        expect(json['status']).to eq(404)
+        expect(json['status']).to eq(422)
       end
     end
   end

@@ -2,7 +2,7 @@ class TicketsController < ApplicationController
   before_action :user_exist?, only: [:index, :show]
 
   def index
-    return render json: { status: 404, message: '存在しないユーザーです' } if @user.blank? 
+    return render json: { status: 404, message: '登録されていないユーザーです' } if @user.blank? 
     @tickets = @user.tickets.includes(:event)
     if @tickets.blank?
       render json: { status: 404, message: 'チケットは持っていません' }
@@ -13,7 +13,7 @@ class TicketsController < ApplicationController
   end
 
   def show
-    return render json: { status: 404, message: '存在しないユーザーです' } if @user.blank? 
+    return render json: { status: 404, message: '登録されていないユーザーです' } if @user.blank? 
     @ticket = @user.tickets.find_by(id: params[:id])
     if @ticket.blank?
       render json: { status: 404, message: '存在しないチケットです' }
@@ -26,7 +26,7 @@ class TicketsController < ApplicationController
   def create
     @ticket = Ticket.new(ticket_params)
     if @ticket.invalid?
-      render json: { status: 404, message: @ticket.errors.full_messages } 
+      render json: { status: 422, message: @ticket.errors.full_messages } 
     else
       @ticket.save
       @data = @ticket.transfer_to_json

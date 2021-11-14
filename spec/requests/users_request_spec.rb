@@ -53,7 +53,7 @@ RSpec.describe "Users", type: :request do
       it 'エラーメッセージが返される' do
         subject
         json = JSON.parse(response.body)
-        expect(json['message']).to eq('存在しないユーザーです') 
+        expect(json['message']).to eq('登録されていないユーザーです') 
       end
       it  'HTTP404が返される' do
         subject
