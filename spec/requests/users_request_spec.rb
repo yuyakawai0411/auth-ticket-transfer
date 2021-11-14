@@ -5,13 +5,14 @@ RSpec.describe "Users", type: :request do
   let!(:user) { FactoryBot.create(:user) } 
   let!(:user_other) { FactoryBot.create(:user) } 
     context '全てのユーザーを検索する時' do
+      subject { get '/users' }
       it 'user,user_otherデータが返される' do
-        get '/users'
+        subject
         json = JSON.parse(response.body)
         expect(json['data'].length).to eq(2) 
       end
       it 'userに正しい値がある' do
-        get '/users'
+        subject
         json = JSON.parse(response.body)
         expect(json['data'][0]['id']).to eq(user.id)
         expect(json['data'][0]['nickname']).to eq(user.nickname)
@@ -19,7 +20,7 @@ RSpec.describe "Users", type: :request do
         expect(json['data'][0]['phone_number']).to eq(user.phone_number)
       end
       it 'HTTP200が返される' do
-        get '/users'
+        subject
         json = JSON.parse(response.body)
         expect(json['status']).to eq(200)    
       end
@@ -29,9 +30,11 @@ RSpec.describe "Users", type: :request do
   describe 'GET #show' do
   let!(:user) { FactoryBot.create(:user) } 
   let!(:user_other) { FactoryBot.create(:user) } 
+  let(:user_not_exist) { user.id + user_other.id }
     context '存在するユーザーを検索する時' do
+      subject { get "/users/#{user.id}" }
       it 'userに正しい値がある' do
-        get "/users/#{user.id}"
+        subject
         json = JSON.parse(response.body)
         expect(json['data']['id']).to eq(user.id)
         expect(json['data']['nickname']).to eq(user.nickname)
@@ -39,22 +42,21 @@ RSpec.describe "Users", type: :request do
         expect(json['data']['phone_number']).to eq(user.phone_number)
       end
       it 'HTTP200が返される' do
-        get "/users/#{user.id}"
+        subject
         json = JSON.parse(response.body)
         expect(json['status']).to eq(200)
       end
     end
 
     context '存在しないユーザーを検索する時' do
+      subject { get "/users/#{user_not_exist}"  }
       it 'エラーメッセージが返される' do
-        user_not_exist = user.id + user_other.id
-        get "/users/#{user_not_exist}" 
+        subject
         json = JSON.parse(response.body)
-        expect(json['message']).to eq('存在しないユーザーです') 
+        expect(json['message']).to eq('登録されていないユーザーです') 
       end
       it  'HTTP404が返される' do
-        user_not_exist = user.id + user_other.id
-        get "/users/#{user_not_exist}"
+        subject
         json = JSON.parse(response.body)
         expect(json['status']).to eq(404) 
       end
