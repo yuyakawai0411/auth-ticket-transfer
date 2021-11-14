@@ -91,17 +91,17 @@ availability_dateと現在の日付を比較し、ステータスを自動で変
 # 使用方法
 ## 事前準備
 1. データベースを作成してください(database.ymlにパスワードが記載されています)
-  - rails db:create
+  - `rails db:create`
 2. マイグレーションを行なってください
-  - rails db:migrate
+  - `rails db:migrate`
 3. サンプルデータをデータベースに保存してください 
-  - rails db:seed
+  - `rails db:seed`
 
 ## アプリのテスト方法
 1. 登録されているユーザーのidをAPIで確認してください
 2. 登録されているイベントのidをAPIで確認してください
 3. 確認したユーザーidとイベントidを元に、APIを使ってチケットをユーザーに発券してください
-   - availability_dateはUNIX timeで記入してください
+   - availability_dateはUNIXtimeで記入してください
 4. ユーザが所有するチケットをAPIで確認してください
 5. ユーザーが所有するチケットを、APIを使って他のユーザーに譲渡してください
    - receiver_idには、譲渡先ユーザーのidを入力してください
@@ -111,10 +111,10 @@ availability_dateと現在の日付を比較し、ステータスを自動で変
 ## バッチ処理のテスト方法
 1. ticketテーブルに、availability_dateが過去の日付かつstatus_idが1のレコードがあることを確認してください
 2. cronにバッチ処理を追加してください(5分毎に処理が行われるため、動作を確認したらすぐに削除してください)
-  - bundle exec whenever --update-crontab
+  - `bundle exec whenever --update-crontab`
 3. 5分後、先程のレコードのstatus_idが2に更新され、status_transitionsテーブルに更新履歴が追加されていることを確認してください
 4. cronに追加したバッチ処理を削除してください 
-  - bundle exec whenever --clear-crontab
+  - `bundle exec whenever --clear-crontab`
 
 
 ## 実装した案、実装しなかった案
