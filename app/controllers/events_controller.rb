@@ -5,10 +5,7 @@ class EventsController < ApplicationController
     if @events.blank? 
       render json: { status: 404, message: '登録されているイベントはありません' }
     else
-      @data = []
-      @events.each do |event|
-        @data << event.transfer_to_json
-      end
+      @data = @events.map{|x| x.transfer_to_json} 
       render json: { status: 200, data: @data }
     end
   end

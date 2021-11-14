@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   has_many :tickets
   has_many :sender_transition, class_name: 'Transition', :foreign_key => 'sender_id'
-  has_many :recever_transition, class_name: 'Transition', :foreign_key => 'recever_id'
+  has_many :receiver_transition, class_name: 'Transition', :foreign_key => 'receiver_id'
   
   with_options presence: true do
     validates :nickname

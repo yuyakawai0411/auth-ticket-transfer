@@ -18,6 +18,7 @@
   - 実装しなかった案
   - 今後実装したい機能
 - テストに使用した時間
+  
 **ER図は、ticket_transfer_app.dioに記載しました**
   
 # 想定したアプリの前提条件
@@ -48,7 +49,7 @@
 - HTTP:POST
 - URL:http://events/:event_id/tickets
 - path:event_id
-- body:availabilty_date, user_id
+- body:availability_date, user_id
 ### レスポンス
 - 発券したチケット情報
 - HTTPステータス201
@@ -67,7 +68,7 @@
 - HTTP:POST
 - http://user/:user_id/tickets/:ticket_id/transtions
 - path:user_id, ticket_id
-- body:recever_id
+- body:receiver_id
 ### レスポンス
 - 譲渡したチケットの名前、送り手、受け手に関する情報
 - HTTPステータス201
@@ -84,7 +85,7 @@
 # その他
 ## チケットのステータスを自動で更新するバッチ処理
 ### 説明
-チケットのavailabilty_dateと現在の日付を比較し、ステータスを自動で変更します。
+availability_dateと現在の日付を比較し、ステータスを自動で変更します。
 当日なら利用可(status_id=2)、過去なら期限切れ(status_id=3)に変更します。
 
 # 使用方法
@@ -100,17 +101,18 @@
 1. 登録されているユーザーのidをAPIで確認してください
 2. 登録されているイベントのidをAPIで確認してください
 3. 確認したユーザーidとイベントidを元に、APIを使ってチケットをユーザーに発券してください
-   - availabilty_dateはUNIX timeで記入してください
+   - availability_dateはUNIX timeで記入してください
 4. ユーザが所有するチケットをAPIで確認してください
 5. ユーザーが所有するチケットを、APIを使って他のユーザーに譲渡してください
+   - receiver_idには、譲渡先ユーザーのidを入力してください
 6. 譲渡されたチケットは誰から譲渡されたものか、APIで確認してください
    - user_idには、譲渡されたユーザーのidを入力してください
 
 ## バッチ処理のテスト方法
-1. サンプルデータのticketテーブルにstatus_idが1になっているレコードがあることを確認してください
+1. ticketテーブルに、availability_dateが過去の日付かつstatus_idが1のレコードがあることを確認してください
 2. cronにバッチ処理を追加してください(5分毎に処理が行われるため、動作を確認したらすぐに削除してください)
   - bundle exec whenever --update-crontab
-3. 5分後、先程のレコードのstatus_idが2に更新され、status_transitionテーブルに更新履歴が追加されていることを確認してください
+3. 5分後、先程のレコードのstatus_idが2に更新され、status_transitionsテーブルに更新履歴が追加されていることを確認してください
 4. cronに追加したバッチ処理を削除してください 
   - bundle exec whenever --clear-crontab
 
@@ -129,7 +131,7 @@
   - デメリット:ログイン状態を保持することが難しい(ブラウザのキャッシュ機能等を用いると簡単に実現できる)
 - 期限切れのチケットを発券できないようにするバリデーション
   - メリット:イベント主催者が誤って期限切れのチケットを発行しないようにする
-  - デメリット:チケットのステータスを推移させるのに時間がかかる(デモが実現しにくい)
+  - デメリット:バッチ処理のデモが実現しにくい(チケットステータスの推移に時間がかかる)
 ## 今後実装したい機能
 - 複数のチケットをまとめて譲渡できる機能 
 

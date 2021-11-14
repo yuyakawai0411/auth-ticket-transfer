@@ -104,7 +104,7 @@ RSpec.describe "Tickets", type: :request do
   let(:user_not_exist) { user.id + 1 }
   let(:ticket) { FactoryBot.build(:ticket, event_id: event.id, user_id: user.id, status_id: 1) }
     context 'チケットの発券にて、paramsを正しくリクエストした時' do
-      subject { post "/events/#{event.id}/tickets", params:  { availabilty_date: '2022-10-25',  user_id: user.id } }
+      subject { post "/events/#{event.id}/tickets", params:  { availability_date: '2022-10-25',  user_id: user.id } }
       it 'Ticketモデルのカウントが+1される' do
         expect{
           subject
@@ -126,7 +126,7 @@ RSpec.describe "Tickets", type: :request do
     end
 
     context 'チケットの発券にて、paramsを正しくリクエストしなかった時' do
-      subject { post "/events/#{event.id}/tickets", params:  { availabilty_date: '2022-10-25', user_id: user_not_exist } }
+      subject { post "/events/#{event.id}/tickets", params:  { availability_date: '2022-10-25', user_id: user_not_exist } }
       it 'Ticketモデルのカウントが変化しない' do
         expect{
           subject
@@ -145,7 +145,7 @@ RSpec.describe "Tickets", type: :request do
     end
 
     context '存在しないイベントからチケットを発券しようとした時' do
-      subject { post "/events/#{event_not_exist}/tickets", params:  { availabilty_date: '2022-10-25',  user_id: user.id } }
+      subject { post "/events/#{event_not_exist}/tickets", params:  { availability_date: '2022-10-25',  user_id: user.id } }
       it 'エラーメッセージが返される' do
         subject
         json = JSON.parse(response.body)

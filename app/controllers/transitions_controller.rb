@@ -3,7 +3,7 @@ class TransitionsController < ApplicationController
 
   def index
     return render json: { status: 404, message: '所持していないチケットです' } if @ticket.blank?
-    @transitions = @ticket.transitions.includes([:sender, :recever]).order(created_at: 'DESC')
+    @transitions = @ticket.transitions.includes([:sender, :receiver]).order(created_at: 'DESC')
     if @transitions.blank?
       render json: { status: 404, message: '譲渡履歴は存在しません' }
     else
@@ -14,7 +14,7 @@ class TransitionsController < ApplicationController
 
   def show
     return render json: { status: 404, message: '所持していないチケットです' } if @ticket.blank?
-    @transition = @ticket.transitions.includes([:sender, :recever]).find_by(id: params[:id])
+    @transition = @ticket.transitions.includes([:sender, :receiver]).find_by(id: params[:id])
     if @transition.blank?
       render json: { status: 404, message: '存在しない譲渡履歴です' }
     else
@@ -38,7 +38,7 @@ class TransitionsController < ApplicationController
   private
   
   def transfer_ticket_params
-    params.permit(:recever_id, :ticket_id).merge(sender_id: params[:user_id])
+    params.permit(:receiver_id, :ticket_id).merge(sender_id: params[:user_id])
   end
 
   def ticket_exist?

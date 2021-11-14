@@ -15,10 +15,10 @@ RSpec.describe Ticket, type: :model do
 
     context 'チケット取得できないとき' do
     subject { ticket.errors.full_messages }
-      it 'availabilty_dateが空では取得できない' do
-        ticket.availabilty_date = ''
+      it 'availability_dateが空では取得できない' do
+        ticket.availability_date = ''
         ticket.valid?
-        is_expected.to include "Availabilty date can't be blank"
+        is_expected.to include "Availability date can't be blank"
       end
       it 'status_idが空では取得できない' do
         ticket.status_id = ''
