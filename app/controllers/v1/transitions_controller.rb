@@ -1,4 +1,4 @@
-class TransitionsController < ApplicationController
+class V1::TransitionsController < ApplicationController
   before_action :ticket_set, only: [:index, :show, :create]
 
   def index

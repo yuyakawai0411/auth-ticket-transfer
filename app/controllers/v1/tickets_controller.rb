@@ -1,4 +1,4 @@
-class TicketsController < ApplicationController
+class V1::TicketsController < ApplicationController
   before_action :user_set, only: [:index, :show]
   before_action :event_set, only: [:create]
 
