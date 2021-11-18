@@ -1,5 +1,5 @@
 class TransitionsController < ApplicationController
-  before_action :ticket_exist?, only: [:index, :show, :create]
+  before_action :ticket_set, only: [:index, :show, :create]
 
   def index
     return render json: { status: 404, message: '所持していないチケットです' } if @ticket.blank?
@@ -41,7 +41,7 @@ class TransitionsController < ApplicationController
     params.permit(:receiver_id, :ticket_id).merge(sender_id: params[:user_id])
   end
 
-  def ticket_exist?
+  def ticket_set
     @user = User.find_by(id: params[:user_id])
     if @user.blank?
       @ticket = []
