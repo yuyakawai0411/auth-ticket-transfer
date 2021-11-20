@@ -5,7 +5,7 @@ RSpec.describe "Events", type: :request do
   let!(:event) { FactoryBot.create(:event) } 
   let!(:event_other) { FactoryBot.create(:event) } 
     context '全てのイベントを検索する時' do
-      subject { get '/events' }
+      subject { get '/v1/events' }
       it 'event,event_otherデータが返される' do
         subject
         json = JSON.parse(response.body)
@@ -32,7 +32,7 @@ RSpec.describe "Events", type: :request do
   let!(:event_other) { FactoryBot.create(:event) } 
   let(:event_not_exist) { event.id + event_other.id }
     context '存在するイベントを検索する時' do
-      subject { get "/events/#{event.id}" }
+      subject { get "/v1/events/#{event.id}" }
       it 'eventに正しい値がある' do
         subject
         json = JSON.parse(response.body)
@@ -49,7 +49,7 @@ RSpec.describe "Events", type: :request do
     end
 
     context '存在しないイベントを検索する時' do
-      subject { get "/events/#{event_not_exist}" }
+      subject { get "/v1/events/#{event_not_exist}" }
       it 'エラーメッセージが返される' do
         subject
         json = JSON.parse(response.body)

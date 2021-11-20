@@ -5,7 +5,7 @@ RSpec.describe "Users", type: :request do
   let!(:user) { FactoryBot.create(:user) } 
   let!(:user_other) { FactoryBot.create(:user) } 
     context '全てのユーザーを検索する時' do
-      subject { get '/users' }
+      subject { get '/v1/users' }
       it 'user,user_otherデータが返される' do
         subject
         json = JSON.parse(response.body)
@@ -32,7 +32,7 @@ RSpec.describe "Users", type: :request do
   let!(:user_other) { FactoryBot.create(:user) } 
   let(:user_not_exist) { user.id + user_other.id }
     context '存在するユーザーを検索する時' do
-      subject { get "/users/#{user.id}" }
+      subject { get "/v1/users/#{user.id}" }
       it 'userに正しい値がある' do
         subject
         json = JSON.parse(response.body)
@@ -49,7 +49,7 @@ RSpec.describe "Users", type: :request do
     end
 
     context '存在しないユーザーを検索する時' do
-      subject { get "/users/#{user_not_exist}"  }
+      subject { get "/v1/users/#{user_not_exist}"  }
       it 'エラーメッセージが返される' do
         subject
         json = JSON.parse(response.body)

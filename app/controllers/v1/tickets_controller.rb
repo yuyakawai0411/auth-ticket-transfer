@@ -1,6 +1,6 @@
-class TicketsController < ApplicationController
-  before_action :user_exist?, only: [:index, :show]
-  before_action :event_exist?, only: [:create]
+class V1::TicketsController < ApplicationController
+  before_action :user_set, only: [:index, :show]
+  before_action :event_set, only: [:create]
 
   def index
     return render json: { status: 404, message: '登録されていないユーザーです' } if @user.blank? 
@@ -42,11 +42,11 @@ class TicketsController < ApplicationController
     params.permit(:user_id, :event_id, :availability_date).merge(status_id: 1)
   end
 
-  def user_exist?
+  def user_set
     @user = User.find_by(id: params[:user_id])
   end
 
-  def event_exist?
+  def event_set
     @event = Event.find_by(id: params[:event_id])
   end
 

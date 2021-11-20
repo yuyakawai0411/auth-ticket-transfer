@@ -7,7 +7,7 @@ RSpec.describe "Tickets", type: :request do
   let!(:ticket) { FactoryBot.create(:ticket, user_id: user.id) }
   let!(:ticket_other) { FactoryBot.create(:ticket, user_id: user.id) }
     context '存在するユーザーを検索した時' do
-      subject { get "/users/#{user.id}/tickets" }
+      subject { get "/v1/users/#{user.id}/tickets" }
       it 'ticket,ticket_otherが返される' do
         subject
         json = JSON.parse(response.body)
@@ -30,7 +30,7 @@ RSpec.describe "Tickets", type: :request do
     end
 
     context '存在しないユーザーを検索した時' do
-      subject { get "/users/#{user_not_exist}/tickets" }
+      subject { get "/v1/users/#{user_not_exist}/tickets" }
       it 'エラーメッセージが返される' do
         subject
         json = JSON.parse(response.body)
@@ -51,7 +51,7 @@ RSpec.describe "Tickets", type: :request do
   let!(:ticket_other) { FactoryBot.create(:ticket, user_id: user.id) }
   let(:ticket_not_exist) { ticket.id + ticket_other.id }
     context 'userが所持するチケットを検索した時' do
-      subject { get "/users/#{user.id}/tickets/#{ticket.id}" }
+      subject { get "/v1/users/#{user.id}/tickets/#{ticket.id}" }
       it 'ticketが返され、正しい値がある' do
         subject
         json = JSON.parse(response.body)
@@ -69,7 +69,7 @@ RSpec.describe "Tickets", type: :request do
     end
 
     context 'userが所持しないチケットを検索した時' do
-      subject { get "/users/#{user.id}/tickets/#{ticket_not_exist}" }
+      subject { get "/v1/users/#{user.id}/tickets/#{ticket_not_exist}" }
       it 'エラーメッセージが返される' do 
         subject
         json = JSON.parse(response.body)
@@ -83,7 +83,7 @@ RSpec.describe "Tickets", type: :request do
     end
 
     context '存在しないユーザーを検索した時' do
-      subject { get "/users/#{user_not_exist}/tickets/#{ticket.id}" }
+      subject { get "/v1/users/#{user_not_exist}/tickets/#{ticket.id}" }
       it 'エラーメッセージが返される' do 
         subject
         json = JSON.parse(response.body)
@@ -104,7 +104,7 @@ RSpec.describe "Tickets", type: :request do
   let(:user_not_exist) { user.id + 1 }
   let(:ticket) { FactoryBot.build(:ticket, event_id: event.id, user_id: user.id, status_id: 1) }
     context 'チケットの発券にて、paramsを正しくリクエストした時' do
-      subject { post "/events/#{event.id}/tickets", params:  { availability_date: '2022-10-25',  user_id: user.id } }
+      subject { post "/v1/events/#{event.id}/tickets", params:  { availability_date: '2022-10-25',  user_id: user.id } }
       it 'Ticketモデルのカウントが+1される' do
         expect{
           subject
@@ -126,7 +126,7 @@ RSpec.describe "Tickets", type: :request do
     end
 
     context 'チケットの発券にて、paramsを正しくリクエストしなかった時' do
-      subject { post "/events/#{event.id}/tickets", params:  { availability_date: '2022-10-25', user_id: user_not_exist } }
+      subject { post "/v1/events/#{event.id}/tickets", params:  { availability_date: '2022-10-25', user_id: user_not_exist } }
       it 'Ticketモデルのカウントが変化しない' do
         expect{
           subject
@@ -145,7 +145,7 @@ RSpec.describe "Tickets", type: :request do
     end
 
     context '存在しないイベントからチケットを発券しようとした時' do
-      subject { post "/events/#{event_not_exist}/tickets", params:  { availability_date: '2022-10-25',  user_id: user.id } }
+      subject { post "/v1/events/#{event_not_exist}/tickets", params:  { availability_date: '2022-10-25',  user_id: user.id } }
       it 'エラーメッセージが返される' do
         subject
         json = JSON.parse(response.body)
